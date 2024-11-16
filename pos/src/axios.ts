@@ -19,7 +19,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response) {
       console.error("Response error:", error.response.data.error );
-      if(error.response.data.error === 'Invalid token.'){
+      if((error.response.data.error === 'Invalid token.')|| (error.response.data.error === "Access denied. No token provided.")){
         sessionStorage.removeItem("jsonwebtoken");
         window.location.href = "/";
       }

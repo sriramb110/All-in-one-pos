@@ -6,7 +6,6 @@ import ShopNavigator from './navigator/ShopNavigator';
 
 function App() {
   const token = sessionStorage.getItem('jsonwebtoken');
-
   return (
     <div className='overflow-hidden w-screen h-screen'>
     <Router>
