@@ -14,3 +14,13 @@ export interface Customer {
     phoneNumber: number
     _id: string
 }
+export interface ProductSelected {
+  ProductName: string;
+  CategoryType: string;
+  Amount: string;
+  orderQty:number
+  ids: {
+    CategoryId: string;
+    ProductId: string;
+  };
+}

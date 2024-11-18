@@ -3,23 +3,30 @@ import Orders from "./Orders";
 import Calculations from "./Calculations";
 import Confirm from "./Confirm";
 import { category, product } from "../../common_component/services";
-import { CategoryInterface, ProductInterface } from "../Interface";
+import { CategoryInterface, ProductInterface, ProductSelected } from "../Interface";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [products, setProducts] = useState<ProductInterface[]>([]);
   const [categorys, setCategory] = useState<CategoryInterface[]>([]);
   const [filterProduct, setFilterProduct] = useState<ProductInterface[]>([]);
+  const [selectCategory, setSelectCategory] = useState<any>();
+  const [selectenProduct,setSelectedProduct] = useState<any>()
+  const [allProduct, setAllProduct] = useState<any>();
 
   useEffect(() => {
     getProduct();
     getCategory();
+    setSelectCategory({ name: "All Products" });
   }, []);
 
   const getProduct = () => {
     product()
       .then((res) => {
         const getproducts: ProductInterface[] = res.data;
-        const shortProduct = getproducts.sort((a,b)=>{return a.productName.localeCompare(b.productName)})
+        const shortProduct = getproducts.sort((a, b) => {
+          return a.productName.localeCompare(b.productName);
+        });
         setProducts(shortProduct);
         setFilterProduct(shortProduct);
       })
@@ -34,7 +41,7 @@ function Home() {
         const getCategoryes: CategoryInterface[] = res.data;
         const allCategory = {
           _id: "",
-          name: "All",
+          name: "All Products",
         };
         setCategory([allCategory, ...getCategoryes]);
       })
@@ -43,26 +50,91 @@ function Home() {
       });
   };
 
-  const filtercategory = (id:any) => {
-    if(id){
-      const filter = products.filter((i) => i.categoryType === id)
+  const filtercategory = (id: any) => {
+    if (id) {
+      const Category = categorys.find((i) => i._id === id);
+      setSelectCategory(Category);
+      const filter = products.filter((i) => i.categoryType === id);
       setFilterProduct(filter);
-    }else{
+    } else {
+      setSelectCategory({ name: "All Products" });
       setFilterProduct(products);
     }
   };
 
+const selectedProduct = (id: string) => {
+  const selectedProduct = products.find((i) => i._id === id);
+  if (!selectedProduct) return;
+
+  const categoryType = categorys.find(
+    (i) => i._id === selectedProduct.categoryType
+  );
+
+  const selectDetails: ProductSelected = {
+    ProductName: selectedProduct.productName,
+    CategoryType: categoryType ? categoryType.name : "Unknown",
+    Amount: selectedProduct.amount.toString(),
+    orderQty:1,
+    ids: {
+      CategoryId: categoryType?._id || "",
+      ProductId: selectedProduct._id,
+    },
+  };
+  setSelectedProduct(selectDetails);
+  setTimeout(() => {
+  setSelectedProduct('');
+  }, 10);
+};
+
+const productList = (orderlists: ProductSelected[]) => {
+  console.log("object", orderlists);
+};
+
+const clear= ()=>{
+  clearAll();
+}
+
+const clearAll = ()=>{
+  setSelectedProduct('');
+  setAllProduct('clear')
+  setTimeout(() => {
+    setAllProduct("");
+  }, 10);
+}
+
   return (
-    <div className="w-full h-full">
-      <div className="flex h-5/6">
-        <div className="w-3/4">
-          <Orders products={filterProduct} />
+    <div className="w-full h-full flex flex-col -mt-3 pb-5 bg-gray-100">
+      <div className="flex flex-grow w-full h-5/6 p-4">
+        <div className="w-full pr-4 h-full flex flex-col">
+          <div className="W-full flex justify-between items-center mx-2 mt-3">
+            <h1 className="text-2xl font-semibold">
+              Category Type: {selectCategory?.name || "Select a Category"}
+            </h1>
+            <Link
+              to={"/setting/products"}
+              className="px-2 mx-2 my-1 w-64 h-10 flex flex-col border-2 justify-center items-center border-gray-600 rounded-md bg-indigo-500 text-white text-xl shadow-md cursor-pointer"
+            >
+              + Products or Category
+            </Link>
+          </div>
+          <div className="flex-1 mt-5 w-full  overflow-auto border rounded-md p-4 bg-white shadow-md">
+            <Orders products={filterProduct} selectproduct={selectedProduct} />
+          </div>
         </div>
-        <div className="w-1/4">
-          <Calculations />
+
+        <div className="w-2/6 h-full flex flex-col">
+          <div className="h-full border rounded-md p-4 bg-white shadow-md">
+            <Calculations
+              orderProducts={selectenProduct}
+              listOfProducts={productList}
+              clearall={clear}
+              allProduct={allProduct}
+            />
+          </div>
         </div>
       </div>
-      <div>
+
+      <div className="w-full h-1/6 p-4  bg-white border-t shadow-md overflow-auto">
         <Confirm categorys={categorys} category={filtercategory} />
       </div>
     </div>
