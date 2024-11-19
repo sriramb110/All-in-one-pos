@@ -9,11 +9,13 @@ export interface ProductInterface {
     _id: string
 }
 export interface Customer {
+    Name: any
     customerName: string
     emailId: string
-    phoneNumber: number
+    phoneNumber: string
     _id: string
 }
+
 export interface ProductSelected {
   ProductName: string;
   CategoryType: string;

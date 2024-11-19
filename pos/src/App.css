@@ -8,6 +8,16 @@
   width: auto;
 }
 
+.confirm_dissable {
+  background-color: rgba(1, 118, 235, 0.37);
+  padding-inline: 20px;
+  padding-block: 5px;
+  color: black;
+  border-radius: 40px;
+  margin: 10px;
+  width: auto;
+}
+
 .bg_incolor {
   background-color: rgba(0, 0, 0, 0.329);
 }
@@ -34,6 +44,21 @@ h1 {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 20;
 }
+
+.modalOrders {
+  top: 0;
+  right: 0;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 20;
+}
+
 .modal_data {
   top: 0;
   right: 0;
