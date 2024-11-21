@@ -63,7 +63,7 @@ function Menu() {
           <div className="flex flex-col w-full justify-evenly items-center h-full menu-icons">
             {icons(iconMap["home"], "/home", "HOME")}
             {icons(iconMap["cart"], "", "Cart")}
-            {icons(iconMap["products"], "", "Orders")}
+            {icons(iconMap["products"], "/orders", "Orders")}
             {icons(iconMap["wallet"], "", "Wallete")}
             {icons(iconMap["settings"], "/setting/products", "Setting")}
             {icons(iconMap["logout"], "Logout", "Logout")}
@@ -75,7 +75,7 @@ function Menu() {
           >
             {iconSmall(iconMap["home"], "")}
             {iconSmall(iconMap["cart"], "")}
-            {iconSmall(iconMap["products"], "")}
+            {iconSmall(iconMap["products"], "/orders")}
             {iconSmall(iconMap["wallet"], "")}
             {iconSmall(iconMap["settings"], "/setting/products")}
             {iconSmall(iconMap["logout"], "Logout")}

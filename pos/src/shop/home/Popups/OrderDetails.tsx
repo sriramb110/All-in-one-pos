@@ -42,7 +42,7 @@ function OrderDetails({ orderList, ordersConfirm }: Props) {
 
   return (
     <div className="w-full h-full flex justify-center">
-      <div className="w-4/6 h-auto bg-white border rounded-md shadow-md p-2 overflow-hidden">
+      <div className="w-4/6 h-5/6 bg-white border rounded-md shadow-md p-2 overflow-hidden">
         <div className="w-full h-26 flex justify-between pb-1 border-b-2">
           <div className="flex flex-col items-center font-semibold text-xl">
             <p>Total Order Qty</p>
@@ -59,7 +59,7 @@ function OrderDetails({ orderList, ordersConfirm }: Props) {
             </p>
           </div>
         </div>
-        <div className="w-full h-4/5  pb-10 overflow-auto p-2">
+        <div className="w-full h-4/5 overflow-auto p-2">
           <div className="flex w-full bg-neutral-300 static">
             <p className="w-16">s.no</p>
             <p className="w-full">Product Name(Category type)</p>
@@ -80,7 +80,7 @@ function OrderDetails({ orderList, ordersConfirm }: Props) {
               </p>
             </div>
           ))}
-          <div className="w-full p-2 border-t-2 flex justify-end">
+          <div className="w-full px-2 border-t-2 flex justify-end">
             <button className="confirm" onClick={() => ordersConfirm()}>
               Order Confirm
             </button>

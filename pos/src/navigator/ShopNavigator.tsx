@@ -5,20 +5,26 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import Home from '../shop/home/Home';
 import SettingNavigate from '../shop/setting/SettingNavigate';
 import { SearchProvider } from '../common_component/menu/SearchContext';
+import OverallOrders from '../shop/Orders/OverallOrders';
+import ThermalPrinterTest from './ThermalPrinterTest';
+import Orders from '../shop/Orders/Orders';
 
 function ShopNavigator() {
   return (
     <SearchProvider>
-      <div className='flex overflow-hidden h-screen w-screen'>
+      <div className="flex overflow-hidden h-screen w-screen">
         <Menu />
-        <div className=' overflow-hidden'>
+        <div className=" overflow-hidden">
           <Headers />
-          <div className='overflow-hidden w-full h-full'>
+          <div className="overflow-hidden w-full h-full pb-9">
             <Routes>
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/home/*" element={<Navigate to="/home" replace />} />
               <Route path="/home" element={<Home />} />
               <Route path="/setting/*" element={<SettingNavigate />} />
+              <Route path="/orders" element={<OverallOrders />} />
+              <Route path="/order/:id" element={<Orders />} />
+              <Route path="/data" element={<ThermalPrinterTest />} />
             </Routes>
           </div>
         </div>

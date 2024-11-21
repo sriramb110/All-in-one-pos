@@ -10,7 +10,7 @@ function SettingNavigate() {
     return (
         <div className="w-full h-full flex flex-col  overflow-hidden">
             <SettingMenu />
-            <div className="h-auto">
+            <div className="h-full">
                 <Routes>
                     <Route path="/*" element={<Navigate to="/setting/products" replace />} />
                     <Route path="/products" element={<Products />} />

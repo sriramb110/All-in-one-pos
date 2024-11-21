@@ -210,49 +210,128 @@ function Customers() {
   }
 
   return (
-    <div className='w-full h-11/12 flex items-center flex-col' style={{ height: '600px' }}>
-      <div className='w-11/12 mb-10 h-20 flex ml-20 mt-4 justify-end pr-2'>
-        {visval.Edit && buttonExpand('Edit Product', () => { setCustChange({ ...custChange, editCustomer: true, all: true }) }, iconMap['Edit'])}
-        {visval.Delete && buttonExpand('Delete Product', () => setCustChange({ ...custChange, deletCustomer: true, all: true }), iconMap['Delete'])}
-        {buttonExpand('Customer', () => setCustChange({ ...custChange, addCustomer: true, all: true }), iconMap['addIcon'])}
+    <div
+      className="w-full h-full flex items-center flex-col"
+    >
+      <div className="w-11/12 h-20 flex ml-20 mt-4 justify-end pr-2">
+        {visval.Edit &&
+          buttonExpand(
+            "Edit Product",
+            () => {
+              setCustChange({ ...custChange, editCustomer: true, all: true });
+            },
+            iconMap["Edit"]
+          )}
+        {visval.Delete &&
+          buttonExpand(
+            "Delete Product",
+            () =>
+              setCustChange({ ...custChange, deletCustomer: true, all: true }),
+            iconMap["Delete"]
+          )}
+        {buttonExpand(
+          "Customer",
+          () => setCustChange({ ...custChange, addCustomer: true, all: true }),
+          iconMap["addIcon"]
+        )}
       </div>
-      <div className='w-auto flex h-96 justify-center'>
-        <Table rows={filteredData} columns={columns} onSelectionChange={handleSelectedData} />
+      <div className="w-full p-5 flex h-4/6 justify-center">
+        <Table
+          rows={filteredData}
+          columns={columns}
+          onSelectionChange={handleSelectedData}
+        />
       </div>
-      {custChange.all && <div className="modal">
-        <div className='w-96 flex justify-end -mb-7 -mr-2'>
-          <IconButton aria-label="product and category" onClick={close}>
-            <IconClose />
-          </IconButton>
-        </div>
-        <div className="modal-popup  pt-6">
-          {custChange.addCustomer && <div className='w-96 m-2 flex justify-center items-center flex-col'>
-            <h1 className='mb-2'>Add Customer</h1>
-            {inputBox('Name', 'text', (value) => setInput({ ...input, Name: value }), error.Name, () => setError({ ...error, Name: '' }), input.Name, true)}
-            {inputBox('Phone Number', 'number', (value) => setInput({ ...input, PhoneNumber: value }), error.PhoneNumber, () => setError({ ...error, PhoneNumber: '' }), input.PhoneNumber, true)}
-            {inputBox('Email Id', 'string', (value) => setInput({ ...input, EmailId: value }), error.EmailId, () => setError({ ...error, EmailId: '' }), input.EmailId, false)}
-            {popupbtn(post, 'Confirm')}
-          </div>}
-          {custChange.deletCustomer && <div className='w-96 flex items-center flex-col'>
-            <h1>Confirm to Delete</h1>
-            {selected.map((i, index) => (
-              <div className='w-52'>
-                {index + 1}. {i.customerName}
+      {custChange.all && (
+        <div className="modal">
+          <div className="w-96 flex justify-end -mb-7 -mr-2">
+            <IconButton aria-label="product and category" onClick={close}>
+              <IconClose />
+            </IconButton>
+          </div>
+          <div className="modal-popup  pt-6">
+            {custChange.addCustomer && (
+              <div className="w-96 m-2 flex justify-center items-center flex-col">
+                <h1 className="mb-2">Add Customer</h1>
+                {inputBox(
+                  "Name",
+                  "text",
+                  (value) => setInput({ ...input, Name: value }),
+                  error.Name,
+                  () => setError({ ...error, Name: "" }),
+                  input.Name,
+                  true
+                )}
+                {inputBox(
+                  "Phone Number",
+                  "number",
+                  (value) => setInput({ ...input, PhoneNumber: value }),
+                  error.PhoneNumber,
+                  () => setError({ ...error, PhoneNumber: "" }),
+                  input.PhoneNumber,
+                  true
+                )}
+                {inputBox(
+                  "Email Id",
+                  "string",
+                  (value) => setInput({ ...input, EmailId: value }),
+                  error.EmailId,
+                  () => setError({ ...error, EmailId: "" }),
+                  input.EmailId,
+                  false
+                )}
+                {popupbtn(post, "Confirm")}
               </div>
-            ))}
-            {popupbtn(deletes, 'Confirm')}
-          </div>}
-          {custChange.editCustomer && <div className='w-96 flex items-center flex-col m-2'>
-            <h1 className='mb-2'>Edit Customer</h1>
-            {inputBox('Name', 'text', (value) => setEdit({ ...edit, Name: value }), error.Name, () => setError({ ...error, Name: '' }), edit.Name, true)}
-            {inputBox('Phone Number', 'number', (value) => setEdit({ ...edit, PhoneNumber: value }), error.PhoneNumber, () => setError({ ...error, PhoneNumber: '' }), edit.PhoneNumber, true)}
-            {inputBox('Email Id', 'email', (value) => setEdit({ ...edit, EmailId: value }), error.EmailId, () => setError({ ...error, EmailId: '' }), edit.EmailId, false)}
-            {popupbtn(editinput, 'Confirm')}
-          </div>}
+            )}
+            {custChange.deletCustomer && (
+              <div className="w-96 flex items-center flex-col">
+                <h1>Confirm to Delete</h1>
+                {selected.map((i, index) => (
+                  <div className="w-52">
+                    {index + 1}. {i.customerName}
+                  </div>
+                ))}
+                {popupbtn(deletes, "Confirm")}
+              </div>
+            )}
+            {custChange.editCustomer && (
+              <div className="w-96 flex items-center flex-col m-2">
+                <h1 className="mb-2">Edit Customer</h1>
+                {inputBox(
+                  "Name",
+                  "text",
+                  (value) => setEdit({ ...edit, Name: value }),
+                  error.Name,
+                  () => setError({ ...error, Name: "" }),
+                  edit.Name,
+                  true
+                )}
+                {inputBox(
+                  "Phone Number",
+                  "number",
+                  (value) => setEdit({ ...edit, PhoneNumber: value }),
+                  error.PhoneNumber,
+                  () => setError({ ...error, PhoneNumber: "" }),
+                  edit.PhoneNumber,
+                  true
+                )}
+                {inputBox(
+                  "Email Id",
+                  "email",
+                  (value) => setEdit({ ...edit, EmailId: value }),
+                  error.EmailId,
+                  () => setError({ ...error, EmailId: "" }),
+                  edit.EmailId,
+                  false
+                )}
+                {popupbtn(editinput, "Confirm")}
+              </div>
+            )}
+          </div>
         </div>
-      </div>}
+      )}
     </div>
-  )
+  );
 }
 
 export default Customers;

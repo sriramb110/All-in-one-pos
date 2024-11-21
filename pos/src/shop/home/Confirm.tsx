@@ -24,7 +24,7 @@ function Confirm({
   };
 
   return (
-    <div className="w-full h-5/6 flex">
+    <div className="w-full h-full flex">
       <div className="w-full bg-white h-full pt-2 flex flex-wrap border-2 border-black rounded-t-3xl">
         {categorys.map((i) => (
           <div

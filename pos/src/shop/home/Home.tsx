@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import Orders from "./Orders";
 import Calculations from "./Calculations";
 import Confirm from "./Confirm";
-import { category, product,getCustomer } from "../../common_component/services";
+import {
+  category,
+  product,
+  getCustomer,
+} from "../../common_component/services";
 import {
   CategoryInterface,
   Customer,
@@ -11,6 +15,7 @@ import {
 } from "../Interface";
 import { Link } from "react-router-dom";
 import Orderspopup from "./Orderspopup";
+import Loading from "../../common_component/Loading";
 
 function Home() {
   const [products, setProducts] = useState<ProductInterface[]>([]);
@@ -22,8 +27,10 @@ function Home() {
   const [selectenProduct, setSelectedProduct] = useState<any>();
   const [allProduct, setAllProduct] = useState<any>();
   const [orderList, setOrderlist] = useState<ProductSelected[]>([]);
-  const [ConfirmOrder,setConfirmOrder]=useState<boolean>();
+  const [ConfirmOrder, setConfirmOrder] = useState<boolean>();
   const [customer, setCustomer] = useState<Customer[]>([]);
+  const [selectCus, setSelectCus] = useState<Customer | null | undefined>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getProduct();
@@ -31,6 +38,7 @@ function Home() {
   }, []);
 
   const getProduct = () => {
+    setLoading(true);
     product()
       .then((res) => {
         const getproducts: ProductInterface[] = res.data;
@@ -39,13 +47,16 @@ function Home() {
         });
         setProducts(shortProduct);
         setFilterProduct(shortProduct);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
   };
 
   const getCategory = () => {
+    setLoading(true);
     category()
       .then((res) => {
         const getCategoryes: CategoryInterface[] = res.data;
@@ -54,21 +65,27 @@ function Home() {
           name: "All Products",
         };
         setCategory([allCategory, ...getCategoryes]);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
   };
 
-  const customers = () =>{
-    getCustomer().then((res)=>{
-      const customersData: Customer[] = res.data;
-      setCustomer(customersData);
-
-    }).catch((error)=>{
-       console.error(error);
-    })
-  }
+  const customers = () => {
+    setLoading(true);
+    getCustomer()
+      .then((res) => {
+        const customersData: Customer[] = res.data;
+        setCustomer(customersData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  };
 
   const filtercategory = (id: any) => {
     if (id) {
@@ -118,6 +135,7 @@ function Home() {
     setSelectedProduct("");
     setOrderlist([]);
     setAllProduct("clear");
+    setSelectCus(null);
     setTimeout(() => {
       setAllProduct("");
     }, 10);
@@ -127,14 +145,28 @@ function Home() {
     clearAll();
   };
 
-  const confirmOrders =()=>{
-    customers()
-    setConfirmOrder(true)
+  const confirmOrders = () => {
+    customers();
+    setConfirmOrder(true);
   };
 
-  const refresh = ()=>{
+  const refresh = () => {
     customers();
-  }
+  };
+
+  const backHome = () => {
+    setConfirmOrder(false);
+    clearAll();
+    setSelectCus(null);
+  };
+
+  const customersData = (data: Customer | null | undefined) => {
+    setSelectCus(data);
+  };
+
+  const newProductsadded = () => {
+    setConfirmOrder(false);
+  };
 
   return (
     <div className="w-full h-full flex flex-col -mt-3 pb-5 bg-gray-100">
@@ -178,12 +210,18 @@ function Home() {
         />
       </div>
 
+      {loading && <Loading />}
+
       {ConfirmOrder && (
         <div className="modalOrders">
           <Orderspopup
             orderList={orderList}
             customer={customer}
             refresh={refresh}
+            backHome={backHome}
+            selectedCustomers={customersData}
+            addProducts={newProductsadded}
+            selectCus={selectCus}
           />
         </div>
       )}

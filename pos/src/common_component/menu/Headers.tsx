@@ -31,19 +31,24 @@ function Headers() {
         );
     };
     const headerName = () => {
+        if (location.pathname.startsWith("/order/")) {
+          return "POS Order - Details";
+        }
         switch (location.pathname) {
-            case '/setting/products':
-                return 'Setting - Products';
-            case '/setting/customer':
-                return 'Setting - Customer';
-            case '/setting/branches':
-                return 'Setting - Branches';
-            case '/setting/employee':
-                return 'Setting - Employee';
-            case '/home':
-                return 'POS Home';
-            default:
-                return 'POS';
+          case "/setting/products":
+            return "Setting - Products";
+          case "/setting/customer":
+            return "Setting - Customer";
+          case "/setting/branches":
+            return "Setting - Branches";
+          case "/setting/employee":
+            return "Setting - Employee";
+          case "/home":
+            return "POS Home";
+          case "/orders":
+            return "POS Orders";
+          default:
+            return "POS";
         }
     };
 

@@ -497,7 +497,7 @@ function Products() {
           </div>
         )}
       </div>
-      <div className='w-auto flex h-96 justify-center'>
+      <div className='w-full p-5 flex h-4/6 justify-center'>
         <Table rows={filteredData} columns={columns} onSelectionChange={handleSelectedData} />
       </div>
     </div>

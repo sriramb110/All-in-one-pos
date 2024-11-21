@@ -32,7 +32,7 @@ const authenticateToken = (req, res, next) => {
 
 router.post('/', authenticateToken, async (req, res) => {
     const { productName, categoryType, amount } = req.body;
-    const businessName = req.user.business; // Assuming the user object has the business name
+    const businessName = req.user.business; 
 
     if (!productName || !categoryType || !businessName) {
         return res.status(400).json({ error: 'Product Name, Category Type, and Business Name are required.' });

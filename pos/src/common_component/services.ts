@@ -182,3 +182,44 @@ export const editCustomer = async(input:any)=>{
     throw error;
   }
 }
+
+export const postOrders = async (
+  Customerdata: any,
+  payment: any,
+  orderList: any,
+  totalPrice:number,
+  orderId:string,
+  Date_Time:string
+) => {
+  try {
+    const response = await api.post(`/order`, {
+      Customerdata,
+      payment,
+      orderList,
+      Date_Time,
+      orderId,
+      totalPrice,
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getOrders = async ()=>{
+  try {
+    const response = await api.get(`/order`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getOrdersid = async (id:any) => {
+  try {
+    const response = await api.get(`/order/${id}`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

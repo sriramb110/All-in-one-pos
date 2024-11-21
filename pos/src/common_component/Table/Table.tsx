@@ -9,7 +9,7 @@ interface Props {
 }
 
 function Table({ rows, columns, onSelectionChange }: Props) {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 5});
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10});
 
   const handleSelectionChange = (newSelection: any) => {
     const selectedData = rows.filter((row) => newSelection.includes(row._id));
@@ -17,14 +17,14 @@ function Table({ rows, columns, onSelectionChange }: Props) {
   };
 
   return (
-    <Paper sx={{ height: '100%', width: '100%' }}>
+    <Paper sx={{ height: '100%', width: 'auto' }}>
       <DataGrid
         rows={rows}
         columns={columns}
         getRowId={(data) => data._id}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[5, 10 , 30, ]}
+        pageSizeOptions={[10 , 30, 50]}
         checkboxSelection
         onRowSelectionModelChange={(newSelection) => handleSelectionChange(newSelection)}
         sx={{ border: 1 }}

@@ -9,21 +9,37 @@ type confirmData = {
   orderList: ProductSelected[];
   customer: Customer[];
   refresh: () => void;
+  backHome: () => void;
+  selectedCustomers: (customer: Customer | null | undefined) => void;
+  addProducts: () => void;
+  selectCus: Customer | null | undefined;
 };
 
-function Orderspopup({ orderList, customer, refresh }: confirmData) {
+function Orderspopup({
+  orderList,
+  customer,
+  refresh,
+  backHome,
+  selectedCustomers,
+  addProducts,
+  selectCus,
+}: confirmData) {
   const [popupHeaders, setPopupheaders] =
     useState<string>("Customer Selection");
-  const [selectCustomer, setSelectCus] = useState<Customer>();
-  const [billVerfy, setBillVerfy] = useState<boolean>(false);
+  const [selectCustomer, setSelectCus] = useState<Customer | null>();
   const [paymentMode, setPaymentMode] = useState<any>();
   const [totalQty, setTotalQty] = useState<number>(0);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [customerDetails, setCustomerDetails] = useState<boolean>(true);
+  const [billVerfy, setBillVerfy] = useState<boolean>(false);
   const [orderCheck, setOrderCheck] = useState<boolean>(false);
   const [paymentCheck, setPaymentCheck] = useState<boolean>(false);
+  const [final, setFinal] = useState<boolean>(false);
 
   useEffect(() => {
+    if (selectCus){
+      customerComplated(selectCus);
+    }
     orderDetails();
   }, []);
 
@@ -50,62 +66,95 @@ function Orderspopup({ orderList, customer, refresh }: confirmData) {
   };
 
   const nextdata = () => {
-    console.log("object");
     setBillVerfy(true);
     setOrderCheck(false);
     setPopupheaders("Payment Methods");
     setPaymentCheck(true);
   };
 
-  const payment = (data:any) => {
+  const payment = (data: any) => {
     setPopupheaders("Waiting for conformation");
     setPaymentMode(data);
     setPaymentCheck(false);
+    setFinal(true);
   };
 
-  const billdata =()=>{
-    setPaymentCheck(false);
-    setCustomerDetails(false);
-    setOrderCheck(true);
-  }
+  const billdata = () => {
+    if (!final) {
+      setPaymentCheck(false);
+      setCustomerDetails(false);
+      setOrderCheck(true);
+    }
+  };
 
-  const payview =()=>{
-    setPaymentCheck(true);
-    setCustomerDetails(false);
+  const payview = () => {
+    if (!final) {
+      setPaymentCheck(true);
+      setCustomerDetails(false);
+      setOrderCheck(false);
+    }
+  };
+
+  const ordersuccess = () => {
+    setPopupheaders("Order Placed Successfully");
+  };
+
+  const goToHome = () => {
+    setPaymentCheck(false);
     setOrderCheck(false);
-  }
+    setSelectCus(null);
+    setPaymentMode("");
+    setBillVerfy(false);
+    setCustomerDetails(true);
+    setFinal(false);
+    backHome();
+  };
+
+  const addNewProduct = () => {
+    selectedCustomers(selectCustomer);
+    setOrderCheck(false);
+    addProducts();
+  };
 
   return (
     <div className="w-5/6 h-5/6 gro -mt-5 ">
       <div className="w-full flex justify-center ">
-        <button className="bg-red-500 text-white font-semibold py-1 px-4 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all">
-          Cancel Orders
-        </button>
-       <h1
-  className={`font-serif mx-5 text-2xl text-shadow-lg p-4 border rounded-md shadow-md ${
-    popupHeaders === "Waiting for conformation"
-      ? "bg-orange-500 text-white"
-      : popupHeaders === "Confirm"
-      ? "bg-green-500 text-white"
-      : "bg-white text-black"
-  }`}
->
-  {popupHeaders}
-</h1>
-        <button className="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all">
-          Add Products
-        </button>
+        <h1
+          className={`font-serif mx-5 text-2xl text-shadow-lg p-4 border rounded-md shadow-md ${
+            popupHeaders === "Waiting for conformation"
+              ? "bg-orange-500 text-white"
+              : popupHeaders === "Order Placed Successfully"
+              ? "bg-green-500 text-white"
+              : "bg-white text-black"
+          }`}
+        >
+          {popupHeaders}
+        </h1>
       </div>
       <div className=" w-full h-full flex">
         <div className="w-2/6 flex flex-col items-center">
           <h1 className="font-serif text-2xl text-shadow-lg w-full mb-2 bg-white p-4 border rounded-md shadow-md">
             Completed Steps:
           </h1>
+          {!final && (
+            <div className=" w-full mb-1 h-auto  overflow-hidden flex justify-center">
+              <div className="flex flex-col gap-1 w-full justify-between bg-white p-2 rounded-md shadow-md">
+                <button
+                  onClick={goToHome}
+                  className="bg-red-500 text-white font-semibold py-1 px-4 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
+                >
+                  Cancel Orders
+                </button>
+              </div>
+            </div>
+          )}
           {selectCustomer && !customerDetails && (
             <div
-              className="w-5/6 bg-white p-4 border rounded-md shadow-md h-auto cursor-pointer"
+              className={`w-5/6 bg-white p-4 border rounded-md shadow-md h-auto cursor - pointer ${
+                final ? "cursor-no-drop" : "cursor - pointer"
+              }`}
               onClick={() => {
-                setCustomerDetails(true);
+                !final && setCustomerDetails(true);
                 setOrderCheck(false);
                 setPaymentCheck(false);
               }}
@@ -190,14 +239,35 @@ function Orderspopup({ orderList, customer, refresh }: confirmData) {
               oldpaymentMode={paymentMode}
             />
           )}
-          <Completed />
+          {final && (
+            <Completed
+              Customerdata={selectCustomer}
+              payment={paymentMode}
+              orderList={orderList}
+              totalAmount={totalAmount}
+              ordersuccess={ordersuccess}
+              goToHome={goToHome}
+            />
+          )}
         </div>
         <div className="w-2/6 flex flex-col items-center ">
           <h1 className="font-serif mb-2 w-full text-2xl text-shadow-lg bg-white p-4 border rounded-md shadow-md">
             Waiting Steps:
           </h1>
+          {!final && (
+            <div className=" w-full mb-1 h-auto  overflow-hidden flex justify-center">
+              <div className="flex flex-col gap-1 w-full justify-between bg-white p-2 rounded-md shadow-md">
+                <button
+                  onClick={addNewProduct}
+                  className="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all"
+                >
+                  Add Products
+                </button>
+              </div>
+            </div>
+          )}
           {!orderCheck && !billVerfy && (
-            <div className="w-5/6 bg-white p-4 border rounded-md shadow-md h-auto cursor-pointer">
+            <div className="w-5/6 bg-white p-4 border rounded-md shadow-md h-auto cursor-not-allowed">
               <p className="-ml-2 -mt-1 font-semibold">Order Details:</p>
               <div className="flex border-b-2 w-full justify-between">
                 <p>Total Price</p>
@@ -212,7 +282,7 @@ function Orderspopup({ orderList, customer, refresh }: confirmData) {
             </div>
           )}
           {!paymentMode && !paymentCheck && (
-            <div className="w-5/6 mt-1 bg-white p-4 border rounded-md shadow-md h-auto cursor-pointer">
+            <div className="w-5/6 mt-1 bg-white p-4 border rounded-md shadow-md h-auto cursor-not-allowed">
               <p className="-ml-2 -mt-1 font-semibold">Payment Details:</p>
               <div className="flex border-b-2 w-full justify-between">
                 <p>Payment Mode</p>
@@ -228,9 +298,11 @@ function Orderspopup({ orderList, customer, refresh }: confirmData) {
               </div>
             </div>
           )}
-          <div className="w-5/6 mt-1 bg-white p-4 border rounded-md shadow-md h-auto cursor-pointer font-semibold">
-            Final Step
-          </div>
+          {!final && (
+            <div className="w-5/6 mt-1 bg-white p-4 border rounded-md shadow-md h-auto cursor-not-allowed font-semibold">
+              Order Status
+            </div>
+          )}
         </div>
       </div>
     </div>

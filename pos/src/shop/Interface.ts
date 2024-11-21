@@ -9,7 +9,6 @@ export interface ProductInterface {
     _id: string
 }
 export interface Customer {
-    Name: any
     customerName: string
     emailId: string
     phoneNumber: string
@@ -25,4 +24,34 @@ export interface ProductSelected {
     CategoryId: string;
     ProductId: string;
   };
+}
+
+export interface Order {
+  _id: string;
+  Customerdata: Customer;
+  payment: Payment;
+  orderList: OrderItem[];
+  totalPrice: number;
+  orderId: string;
+  Date_Time: string;
+  businessName: string;
+}
+
+export interface Payment {
+  paymentMethod: string;
+  discount: number;
+  reservedPrice: number;
+}
+
+export interface OrderItem {
+  ProductName: string;
+  CategoryType: string;
+  Amount: string;
+  orderQty: number;
+  ids: Ids;
+}
+
+export interface Ids {
+  CategoryId: string;
+  ProductId: string;
 }
