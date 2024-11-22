@@ -35,12 +35,14 @@ function Orderspopup({
   const [orderCheck, setOrderCheck] = useState<boolean>(false);
   const [paymentCheck, setPaymentCheck] = useState<boolean>(false);
   const [final, setFinal] = useState<boolean>(false);
+  const [OSB,setOSB]=useState<string>('')
 
   useEffect(() => {
     if (selectCus){
       customerComplated(selectCus);
     }
     orderDetails();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const orderDetails = () => {
@@ -116,6 +118,10 @@ function Orderspopup({
     addProducts();
   };
 
+  const outStandingBalance =(osb:string)=>{
+    setOSB(osb);
+  }
+
   return (
     <div className="w-5/6 h-5/6 gro -mt-5 ">
       <div className="w-full flex justify-center ">
@@ -166,9 +172,13 @@ function Orderspopup({
                 <p className="w-20">Customer Name</p>
                 <p>{selectCustomer.customerName}</p>
               </div>
-              <div className="flex w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between">
                 <p className="w-20">Phone Number</p>
                 <p>{selectCustomer.phoneNumber}</p>
+              </div>
+              <div className="flex  w-full justify-between">
+                <p className="w-20">OSB</p>
+                <p>{Number(OSB).toFixed(2)} </p>
               </div>
             </div>
           )}
@@ -181,12 +191,12 @@ function Orderspopup({
               <div className="flex border-b-2 w-full justify-between">
                 <p>Total Price</p>
                 <p className="font-semibold text-3xl text-red-600">
-                  {totalAmount}
+                  {totalAmount.toFixed(2)}{" "}
                 </p>
               </div>
               <div className="flex w-full justify-between">
                 <p>Total Qty</p>
-                <p>{totalQty}</p>
+                <p>{totalQty.toFixed(2)} </p>
               </div>
             </div>
           )}
@@ -227,6 +237,8 @@ function Orderspopup({
               Refresh={refresh}
               Avabiles={selectCustomer}
               closeCustomer={closeCustomer}
+              OSB={outStandingBalance}
+              obss={OSB}
             />
           )}
           {orderCheck && (
@@ -237,6 +249,7 @@ function Orderspopup({
               totalAmount={totalAmount}
               paymentDetails={payment}
               oldpaymentMode={paymentMode}
+              OSB={OSB}
             />
           )}
           {final && (

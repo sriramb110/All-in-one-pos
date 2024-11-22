@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Customer, ProductSelected } from "../../Interface";
-import { postOrders } from "../../../common_component/services";
+import { postLedger, postOrders } from "../../../common_component/services";
 
 type Props = {
   Customerdata: Customer | any;
@@ -25,6 +25,7 @@ function Completed({
 
   useEffect(() => {
     postorder();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const postorder = () => {
@@ -34,9 +35,15 @@ function Completed({
     setDate(dateorder);
     setOrderId(OrdersId);
 
+    const Payment = {
+      paymentMethod: payment.paymentMethod,
+      discount: payment.discount,
+      reservedPrice: payment.reservedPrice,
+    };
+
     postOrders(
       Customerdata,
-      payment,
+      Payment,
       orderList,
       totalAmount,
       OrdersId,
@@ -45,8 +52,17 @@ function Completed({
       .then((res) => {
         ordersuccess();
         setResponceSuccess(true);
+        ledgerUpdate(Customerdata.phoneNumber, res.data.order._id, payment.osb);
       })
       .catch((error) => {});
+  };
+
+  const ledgerUpdate = (CustomerPhoneNumber: string, OrderId:string,OSB:string) => {
+    postLedger(CustomerPhoneNumber, OrderId,OSB).then((res) => {
+      console.log(res);
+    }).catch((error)=>{
+      console.log(error)
+    })
   };
   return (
     <div className="w-full flex justify-center h-auto overflow-hidden">

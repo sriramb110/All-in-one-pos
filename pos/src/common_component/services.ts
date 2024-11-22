@@ -213,7 +213,7 @@ export const getOrders = async ()=>{
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const getOrdersid = async (id:any) => {
   try {
@@ -223,3 +223,25 @@ export const getOrdersid = async (id:any) => {
     throw error;
   }
 };
+
+export const postLedger = async (CustomerPhoneNumber: string, OrderId:string,OSB:string)=>{
+  try {
+    const response = await api.post(`/ledger`, {
+      CustomerPhoneNumber,
+      OrderId,
+      OSB
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const osbLedger = async (CustomerPhoneNumber: string)=>{
+  try {
+    const response = await api.get(`/ledger/osb/${CustomerPhoneNumber}`)
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Customer } from "../../Interface";
 import { TextField } from "@mui/material";
-import { postCustomer } from "../../../common_component/services";
+import { postCustomer, osbLedger } from "../../../common_component/services";
 
 type Props = {
   customer: Customer[];
   nextStep: (updateData: any) => void;
   Refresh: () => void;
   Avabiles: any;
-  closeCustomer:()=>void;
+  closeCustomer: () => void;
+  OSB: (numbrt: string) => void;
+  obss:string;
 };
 
 function Customers({
@@ -17,6 +19,8 @@ function Customers({
   Refresh,
   Avabiles,
   closeCustomer,
+  OSB,
+  obss,
 }: Props) {
   const [input, setInput] = useState({
     Name: "",
@@ -24,6 +28,8 @@ function Customers({
     EmailId: "",
   });
   const [addContact, setAddContact] = useState<boolean>(true);
+  const [osb, setOsb] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (Avabiles) {
@@ -32,6 +38,7 @@ function Customers({
         PhoneNumber: Avabiles.phoneNumber,
         EmailId: Avabiles.emailId,
       });
+      setOsb(obss);
     }
   }, [Avabiles]);
 
@@ -56,6 +63,18 @@ function Customers({
         )[0];
 
         if (foundCustomer) {
+          setLoading(true);
+          osbLedger(inputNumber)
+            .then((res) => {
+              setOsb(res.data.ledger);
+              OSB(res.data.ledger);
+              setLoading(false);
+            })
+            .catch((error) => {
+              setLoading(false);
+              setOsb("0");
+              OSB("0");
+            });
           setInput({
             Name: foundCustomer.customerName,
             PhoneNumber: foundCustomer.phoneNumber,
@@ -69,8 +88,12 @@ function Customers({
             EmailId: "",
           });
           setAddContact(false);
+          setOsb("0");
+          OSB("0");
         }
       } else {
+        setOsb("0");
+        OSB("0");
         setInput({
           PhoneNumber: inputNumber,
           Name: "",
@@ -113,7 +136,7 @@ function Customers({
           <div className="w-full flex justify-end">
             <p
               className="mx-1 cursor-pointer hover:border-blue-100 text-red-600 font-bold"
-              onClick={()=>closeCustomer()}
+              onClick={() => closeCustomer()}
             >
               X
             </p>
@@ -145,6 +168,19 @@ function Customers({
             onChange={(e) => setInput({ ...input, EmailId: e.target.value })}
             disabled={addContact}
           />
+
+          <div className="flex w-full justify-between font-semibold text-2xl">
+            <p>Out Standing Balance</p>
+            {loading ? (
+              <div className="flex justify-center items-center space-x-2 mb-4">
+                <div className="w-5 h-5 bg-blue-500 rounded-full animate-bounce"></div>
+                <div className="w-5 h-5 bg-blue-500 rounded-full animate-bounce delay-200"></div>
+                <div className="w-5 h-5 bg-blue-500 rounded-full animate-bounce delay-400"></div>
+              </div>
+            ) : (
+              <p className="text-red-700">{Number(osb).toFixed(2)} </p>
+            )}
+          </div>
 
           <div className="w-full flex justify-center gap-2 mt-4">
             <button

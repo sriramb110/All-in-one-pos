@@ -11,6 +11,7 @@ function Orders() {
 
   useEffect(() => {
     fetchOrder();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchOrder = async () => {
@@ -45,8 +46,8 @@ function Orders() {
       <div className="w-full flex bg-white border rounded-lg shadow-inner h-full p-2 overflow-hidden">
         <div className="w-full h-full">
           <h1>Orders List :</h1>
-          <div className="w-full h-full">
-            <dl className="flex bg-slate-300 h-12 w-full p-1 px-2 border-b-2 shadow font-semibold">
+          <div className="w-full h-full pb-10 overflow-auto">
+            <dl className="flex bg-slate-300 h-12 w-full p-1 px-2 border-b-2 shadow font-semibold sticky top-0 z-2">
               <dt className="w-14 h-full flex justify-center items-center ">
                 S.No
               </dt>
@@ -64,7 +65,7 @@ function Orders() {
                 Total Price
               </dt>
             </dl>
-            <div className="w-full h-full overflow-auto flex flex-col flex-1 ">
+            <div className="w-full flex flex-col flex-1 ">
               {order.orderList.map((item, index) => (
                 <dl
                   key={index} // Ensure a unique key for each row
@@ -85,10 +86,10 @@ function Orders() {
                     {item.orderQty}
                   </dt>
                   <dt className="w-20 h-full flex justify-end items-center">
-                    {item.Amount}
+                    {Number(item.Amount).toFixed(2)}{" "}
                   </dt>
                   <dt className="w-32 h-full flex justify-end items-center">
-                    {item.orderQty * Number(item.Amount)}
+                    {(item.orderQty * Number(item.Amount)).toFixed(2)}{" "}
                   </dt>
                 </dl>
               ))}
@@ -100,7 +101,7 @@ function Orders() {
         <div className="w-full h-1/6 bg-gray-100 p-4 border rounded-lg shadow-inner">
           <p className="font-bold text-xl">Order Price:</p>
           <h1 className="w-full flex justify-end text-5xl text-red-600">
-            {order.totalPrice}
+            {order.totalPrice.toFixed(2)}{" "}
           </h1>
         </div>
         <div className="w-full bg-gray-100 p-2 border rounded-lg shadow-inner">
@@ -146,6 +147,14 @@ function Orders() {
             </li>
             <li>
               <p>Order Status:</p>
+              <p></p>
+            </li>
+            <li>
+              <p>Total Qty:</p>
+              <p></p>
+            </li>
+            <li>
+              <p>Total Products:</p>
               <p></p>
             </li>
           </ul>

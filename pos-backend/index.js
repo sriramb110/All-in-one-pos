@@ -9,6 +9,7 @@ const category = require('./api/category');
 const products = require('./api/products');
 const customer = require('./api/customer')
 const orders = require("./api/orders");
+const ledger = require("./api/Ledger")
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use(cors());
 
 // Load environment variables
 const mongoURI = process.env.MONGO_URI;
-const port = process.env.PORT || 3500;
+const port = process.env.PORT;
 
 // Check for required environment variables
 if (!mongoURI) {
@@ -44,6 +45,7 @@ app.use('/api/categories', category);
 app.use('/api/products', products);
 app.use('/api/customer', customer);
 app.use("/api/order", orders);
+app.use("/api/ledger", ledger);
 
 // Email Endpoint
 app.post('/send-email', (req, res) => {
@@ -61,5 +63,5 @@ app.post('/send-email', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running at ${process.env.BACKPORT}`);
 });
