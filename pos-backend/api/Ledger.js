@@ -2,7 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const router = express.Router();
-const orders = require('./orders')
+const orders = require("./orders");
 const axios = require("axios");
 
 const LedgerSchema = new mongoose.Schema({
@@ -74,13 +74,13 @@ router.post("/", authenticateToken, async (req, res) => {
   }
 });
 
+
 router.get("/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
   const { CustomerPhoneNumber } = req.params;
 
   try {
-    const ledger = await Ledger.findOne({
-      CustomerPhoneNumber
-    });
+    // Fetch the ledger entry
+    const ledger = await Ledger.findOne({ CustomerPhoneNumber });
 
     if (!ledger) {
       return res
@@ -88,8 +88,9 @@ router.get("/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
         .json({ error: "No outstanding balance or ledger found." });
     }
 
+    let orderDetails = [];
     if (ledger.OrderId && ledger.OrderId.length > 0) {
-      const orderDetails = await Promise.all(
+      orderDetails = await Promise.all(
         ledger.OrderId.map(async (id) => {
           try {
             const response = await axios.get(
@@ -98,13 +99,15 @@ router.get("/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
                 headers: { Authorization: req.header("Authorization") },
               }
             );
-            const orderDetails = response.data.order;
-            const orderPayment = orderDetails.payment
-            const orderDate = orderDetails.Date_Time;
-            const orderPrice = orderDetails.totalPrice;
-            const orderId = orderDetails.orderId;
 
-            return { orderPayment, orderDate, orderId, orderPrice }; 
+            const { payment, Date_Time, totalPrice, orderId } =
+              response.data.order;
+            return {
+              orderPayment: payment,
+              orderDate: Date_Time,
+              orderPrice: totalPrice,
+              orderId,
+            };
           } catch (error) {
             if (error.response?.status === 404) {
               console.warn(`Order with ID: ${id} not found.`);
@@ -118,23 +121,44 @@ router.get("/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
           }
         })
       );
-
-      return res.status(200).json({
-        message: "Ledger found.",
-        ledger: ledger,
-        orderDetails: orderDetails,
-      });
     }
 
-    // If no OrderId exists
-    return res
-      .status(200)
-      .json({ message: "No orders found in ledger.", ledger });
+    let customerDetails;
+    try {
+      const response = await axios.get(
+        `${process.env.BACKPORT}/api/customer/ledger/${CustomerPhoneNumber}`,
+        {
+          headers: { Authorization: req.header("Authorization") },
+        }
+      );
+      customerDetails = response.data;
+    } catch (error) {
+      if (error.response?.status === 404) {
+        console.warn(
+          `Customer with phone number ${CustomerPhoneNumber} not found.`
+        );
+        customerDetails = "Customer not found.";
+      } else {
+        console.error(
+          `Error fetching customer details for phone number ${CustomerPhoneNumber}:`,
+          error.message
+        );
+        customerDetails = "Error fetching customer details.";
+      }
+    }
+
+    return res.status(200).json({
+      message: "Ledger found.",
+      ledger,
+      orderDetails,
+      customerDetails,
+    });
   } catch (error) {
     console.error("Error fetching ledger:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 router.get("/osb/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
   const { CustomerPhoneNumber } = req.params;
@@ -151,7 +175,6 @@ router.get("/osb/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
     }
 
     if (ledger.OrderId && ledger.OrderId.length > 0) {
-
       return res.status(200).json({
         message: "Ledger found.",
         ledger: ledger.OSB,
@@ -168,6 +191,61 @@ router.get("/osb/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/", authenticateToken, async (req, res) => {
+  try {
+    const ledgers = await Ledger.find({ businessName: req.user.business });
 
+    if (!ledgers || ledgers.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No outstanding balance or ledger found." });
+    }
+
+    const detailedLedgers = await Promise.all(
+      ledgers.map(async (ledger) => {
+        try {
+          const response = await axios.get(
+            `${process.env.BACKPORT}/api/customer/ledger/${ledger.CustomerPhoneNumber}`,
+            {
+              headers: { Authorization: req.header("Authorization") },
+            }
+          );
+
+          return {
+            ...ledger.toObject(),
+            customerDetails: response.data,
+          };
+        } catch (error) {
+          if (error.response?.status === 404) {
+            console.warn(
+              `Customer with phone number ${ledger.CustomerPhoneNumber} not found.`
+            );
+            return {
+              ...ledger.toObject(),
+              customerDetails: "Customer not found.",
+            };
+          }
+
+          console.error(
+            `Error fetching customer details for phone number ${ledger.CustomerPhoneNumber}:`,
+            error.message
+          );
+          return {
+            ...ledger.toObject(),
+            customerDetails: "Error fetching customer details.",
+          };
+        }
+      })
+    );
+
+    return res.status(200).json({
+      message: "Ledgers found.",
+      data: detailedLedgers,
+    });
+  } catch (error) {
+    console.error("Error fetching ledger details:", error.message);
+    return res.status(500).json({ error: "Server error: " + error.message });
+  }
+});
 
 module.exports = router;

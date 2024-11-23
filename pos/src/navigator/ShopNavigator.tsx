@@ -8,6 +8,7 @@ import { SearchProvider } from '../common_component/menu/SearchContext';
 import OverallOrders from '../shop/Orders/OverallOrders';
 import ThermalPrinterTest from './ThermalPrinterTest';
 import Orders from '../shop/Orders/Orders';
+import CustomerLedger from '../shop/Wallet/CustomerLedger';
 
 function ShopNavigator() {
   return (
@@ -24,6 +25,7 @@ function ShopNavigator() {
               <Route path="/setting/*" element={<SettingNavigate />} />
               <Route path="/orders" element={<OverallOrders />} />
               <Route path="/order/:id" element={<Orders />} />
+              <Route path="/wallet" element={<CustomerLedger />} />
               <Route path="/data" element={<ThermalPrinterTest />} />
             </Routes>
           </div>

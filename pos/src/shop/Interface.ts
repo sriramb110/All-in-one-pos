@@ -55,3 +55,24 @@ export interface Ids {
   CategoryId: string;
   ProductId: string;
 }
+
+export interface LedgerResponse {
+  ledger: Ledger;
+  orderDetails: OrderDetail[];
+  customerDetails: Customer;
+  OSB:number;
+}
+export interface Ledger {
+  _id: string;
+  CustomerPhoneNumber: string;
+  OrderId: string[];
+  OSB: string;
+  businessName: string;
+  __v: number;
+}
+export interface OrderDetail {
+  orderPayment: Payment;
+  orderDate: string;
+  orderPrice: number;
+  orderId: string;
+}

@@ -47,6 +47,8 @@ function Headers() {
             return "POS Home";
           case "/orders":
             return "POS Orders";
+          case "/wallet":
+            return "POS Wallet";
           default:
             return "POS";
         }

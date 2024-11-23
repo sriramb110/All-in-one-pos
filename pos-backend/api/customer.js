@@ -60,9 +60,10 @@ router.get('/', authenticateToken, async (req, res) => {
 
 router.get('/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
+    const businessName = req.user.business;
 
     try {
-        const customer = await Customer.findById(id);
+        const customer = await Customer.findById(id, businessName);
 
         if (!customer) {
             return res.status(404).json({ error: 'Customer not found.' });
@@ -78,6 +79,28 @@ router.get('/:id', authenticateToken, async (req, res) => {
         res.status(500).json({ error: 'Server error: ' + error.message });
     }
 });
+
+router.get("/ledger/:phoneNumber", authenticateToken, async (req, res) => {
+  const { phoneNumber } = req.params;
+
+  try {
+    const customer = await Customer.findOne({ phoneNumber });
+
+    if (!customer) {
+      return res.status(404).json({ error: "Customer not found." });
+    }
+
+    if (customer.businessName !== req.user.business) {
+      return res.status(403).json({ error: "Access denied." });
+    }
+
+    res.status(200).json(customer);
+  } catch (error) {
+    console.error("Error fetching customer:", error);
+    res.status(500).json({ error: "Server error: " + error.message });
+  }
+});
+
 
 router.delete('/', authenticateToken, async (req, res) => {
     const { ids } = req.body;

@@ -59,7 +59,7 @@ function OrderDetails({ orderList, ordersConfirm }: Props) {
             </p>
           </div>
         </div>
-        <div className="w-full h-4/5 overflow-auto p-2">
+        <div className="w-full h-3/4 overflow-auto p-2">
           <div className="flex w-full bg-neutral-300 static">
             <p className="w-16">s.no</p>
             <p className="w-full">Product Name(Category type)</p>
@@ -80,12 +80,12 @@ function OrderDetails({ orderList, ordersConfirm }: Props) {
               </p>
             </div>
           ))}
-          <div className="w-full px-2 border-t-2 flex justify-end">
+        </div>
+          <div className="w-full h-16 px-2 border-t-2 flex justify-center">
             <button className="confirm" onClick={() => ordersConfirm()}>
               Order Confirm
             </button>
           </div>
-        </div>
       </div>
     </div>
   );

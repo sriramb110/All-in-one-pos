@@ -245,3 +245,12 @@ export const osbLedger = async (CustomerPhoneNumber: string)=>{
     throw error;
   }
 }
+
+export const getLedger = async()=>{
+  try {
+    const response = await api.get(`/ledger`);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}

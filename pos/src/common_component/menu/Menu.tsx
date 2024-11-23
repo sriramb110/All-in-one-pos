@@ -64,7 +64,7 @@ function Menu() {
             {icons(iconMap["home"], "/home", "HOME")}
             {icons(iconMap["cart"], "", "Cart")}
             {icons(iconMap["products"], "/orders", "Orders")}
-            {icons(iconMap["wallet"], "", "Wallete")}
+            {icons(iconMap["wallet"], "/wallet", "Wallet")}
             {icons(iconMap["settings"], "/setting/products", "Setting")}
             {icons(iconMap["logout"], "Logout", "Logout")}
           </div>
@@ -76,7 +76,7 @@ function Menu() {
             {iconSmall(iconMap["home"], "")}
             {iconSmall(iconMap["cart"], "")}
             {iconSmall(iconMap["products"], "/orders")}
-            {iconSmall(iconMap["wallet"], "")}
+            {iconSmall(iconMap["wallet"], "/wallet")}
             {iconSmall(iconMap["settings"], "/setting/products")}
             {iconSmall(iconMap["logout"], "Logout")}
           </div>

@@ -40,6 +40,7 @@ function Customers({
       });
       setOsb(obss);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Avabiles]);
 
   const clearData = () => {
