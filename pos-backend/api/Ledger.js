@@ -248,4 +248,41 @@ router.get("/", authenticateToken, async (req, res) => {
   }
 });
 
+router.patch("/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
+  const { CustomerPhoneNumber } = req.params; // Extract CustomerPhoneNumber from URL
+  const { OSB } = req.body; // Get OSB from the request body
+
+  // Validate the OSB field
+  if (OSB === undefined) {
+    return res
+      .status(400)
+      .json({ error: "OSB is required in the request body." });
+  }
+
+  try {
+    // Find the ledger by CustomerPhoneNumber
+    const existingLedger = await Ledger.findOne({ CustomerPhoneNumber });
+
+    // Check if the ledger exists
+    if (!existingLedger) {
+      return res.status(404).json({
+        error: "Ledger not found for the provided CustomerPhoneNumber.",
+      });
+    }
+
+    // Update the OSB field
+    existingLedger.OSB = OSB;
+    await existingLedger.save();
+
+    return res.status(200).json({
+      message: "Ledger OSB updated successfully.",
+      data: existingLedger,
+    });
+  } catch (error) {
+    console.error("Error updating ledger OSB:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
 module.exports = router;

@@ -133,6 +133,38 @@ router.get("/:id", authenticateToken, async (req, res) => {
   }
 });
 
+router.patch("/:orderId", authenticateToken, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { payment } = req.body;
+
+    if (!payment) {
+      return res.status(400).json({ error: "Payment data is required." });
+    }
+
+    const updatedOrder = await Orders.findOneAndUpdate(
+      { orderId, businessName: req.user.business },
+      { $set: { payment } },
+      { new: true } 
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ error: "Order not found." });
+    }
+
+    res.status(200).json({
+      message: "Payment updated successfully.",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while updating the payment." });
+  }
+});
+
+
 
 
 module.exports = router;

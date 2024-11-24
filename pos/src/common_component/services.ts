@@ -263,3 +263,21 @@ export const getLedgerdata = async(number:any)=>{
     throw error;
   }
 }
+
+export const patchOrder = async (id: any, payment:any) => {
+  try {
+    const response = await api.patch(`/order/${id}`, { payment });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const patchledger = async (number:any,OSB:any) => {
+  try {
+    const response = await api.patch(`/ledger/${number}`, { OSB });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

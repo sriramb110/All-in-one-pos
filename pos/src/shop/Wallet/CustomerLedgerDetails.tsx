@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getLedgerdata } from "../../common_component/services";
+import {
+  getLedgerdata,
+  patchledger,
+  patchOrder,
+} from "../../common_component/services";
 import { LedgerResponse } from "../Interface";
+import Loading from "../../common_component/Loading";
 
 function CustomerLedgerDetails() {
   const { id } = useParams<{ id: string }>();
   const [ledger, setLedger] = useState<LedgerResponse>();
   const [reservedPrice, setReservedPrice] = useState<number>(0);
   const [payMode, setPaymode] = useState<string>("");
-  const [payosb,setPayosb]=useState<boolean>(false);
+  const [payosb, setPayosb] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getLedugerDetails();
@@ -20,8 +26,11 @@ function CustomerLedgerDetails() {
       .then((res) => {
         const ledugerData: LedgerResponse = res.data;
         setLedger(ledugerData);
+        setLoading(false);
       })
-      .catch(() => {});
+      .catch((error) => {
+        setLoading(false);
+      });
   };
 
   const calculateBalances = () => {
@@ -41,6 +50,59 @@ function CustomerLedgerDetails() {
     if (!isNaN(inputNumber) && inputNumber <= Number(ledger?.ledger.OSB)) {
       setReservedPrice(inputNumber);
     }
+  };
+
+  const payments = () => {
+    setLoading(true);
+    const price = Number(ledger?.ledger.OSB) - reservedPrice;
+    patchledger(id, price)
+      .then((res) => console.log(res))
+      .catch((error) => {
+        console.log(error);
+      });
+
+    ledger?.orderDetails.map((order) => {
+      const data = {
+        orderPrice: order.orderPrice,
+        reservedPrice: order.orderPayment?.reservedPrice,
+        balance: order.orderPrice - order.orderPayment?.reservedPrice,
+        discount: order.orderPayment.discount,
+      };
+      if (reservedPrice > 0) {
+        const pay = -data.balance + reservedPrice;
+        setReservedPrice(pay);
+        if (0 <= pay) {
+          if (data.balance !== 0) {
+            const payment = {
+              paymentMethod: payMode,
+              discount: data.discount,
+              reservedPrice: data.orderPrice,
+            };
+            patchOrder(order.orderId, payment)
+              .then((res) => console.log(res))
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+        } else if (pay !== 0) {
+          const payment = {
+            paymentMethod: payMode,
+            discount: data.discount,
+            reservedPrice: reservedPrice + data.reservedPrice,
+          };
+          patchOrder(order.orderId, payment)
+            .then((res) => console.log(res))
+            .catch((error) => {
+              console.log(error);
+            });
+          setReservedPrice(0);
+        }
+      }
+    });
+    getLedugerDetails();
+    setReservedPrice(0);
+    setPayosb(false);
+    setLoading(false);
   };
 
   return (
@@ -82,7 +144,15 @@ function CustomerLedgerDetails() {
             </h1>
             {!payosb && (
               <div className="w-full h-20 flex justify-center font-semibold items-center">
-                <button className="confirm" onClick={() => setPayosb(true)}>
+                <button
+                  className={` ${
+                    Number(ledger?.ledger.OSB) !== 0
+                      ? "confirm"
+                      : "confirm_dissable"
+                  }`}
+                  disabled={Number(ledger?.ledger.OSB) === 0}
+                  onClick={() => setPayosb(true)}
+                >
                   Pay OSB
                 </button>
               </div>
@@ -126,7 +196,13 @@ function CustomerLedgerDetails() {
                     <p>{Number(ledger?.ledger.OSB) - reservedPrice}</p>
                   </div>
                   <div className="w-full justify-center flex">
-                    <button className="confirm font-semibold">
+                    <button
+                      className={` font-semibold ${
+                        reservedPrice ? "confirm" : "confirm_dissable"
+                      }`}
+                      onClick={payments}
+                      disabled={!reservedPrice}
+                    >
                       Confirm to pay
                     </button>
                   </div>
@@ -164,40 +240,49 @@ function CustomerLedgerDetails() {
               </dt>
             </dl>
             <div className="w-full flex flex-col flex-1">
-              {ordersWithBalances?.map((item, index) => (
-                <dl
-                  key={index}
-                  className={`flex h-12 w-full p-1 px-2 border-b-2 ${
-                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                  }`}
-                >
-                  <dt className="w-14 h-full flex justify-center items-center">
-                    {index + 1}
-                  </dt>
-                  <dt className="w-1/6 h-full flex justify-start items-center">
-                    {item.orderId}
-                  </dt>
-                  <dt className="w-1/6 h-full flex justify-start items-center">
-                    {item.orderDate}
-                  </dt>
-                  <dt className="w-1/6 h-full flex justify-end items-center">
-                    {item.orderPrice}
-                  </dt>
-                  <dt className="w-1/6 h-full flex justify-end items-center">
-                    {item.orderPayment.reservedPrice}
-                  </dt>
-                  <dt className="w-1/6 h-full flex justify-end items-center">
-                    {item.perOrderBalance.toFixed(2)}
-                  </dt>
-                  <dt className="w-1/6 h-full flex justify-end items-center">
-                    {item.runningBalance.toFixed(2)}
-                  </dt>
-                </dl>
-              ))}
+              {ordersWithBalances?.map(
+                (item, index) =>
+                  item.perOrderBalance !== 0 && (
+                    <dl
+                      key={index}
+                      className={`flex h-12 w-full p-1 px-2 border-b-2 ${
+                        index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                      }`}
+                    >
+                      <dt className="w-14 h-full flex justify-center items-center">
+                        {index + 1}
+                      </dt>
+                      <dt className="w-1/6 h-full flex justify-start items-center">
+                        {item.orderId}
+                      </dt>
+                      <dt className="w-1/6 h-full flex justify-start items-center">
+                        {item.orderDate}
+                      </dt>
+                      <dt className="w-1/6 h-full flex justify-end items-center">
+                        {item.orderPrice}
+                      </dt>
+                      <dt className="w-1/6 h-full flex justify-end items-center">
+                        {item.orderPayment.reservedPrice}
+                      </dt>
+                      <dt className="w-1/6 h-full flex justify-end items-center">
+                        {item.perOrderBalance.toFixed(2)}
+                      </dt>
+                      <dt className="w-1/6 h-full flex justify-end items-center">
+                        {item.runningBalance.toFixed(2)}
+                      </dt>
+                    </dl>
+                  )
+              )}
+              {Number(ledger?.ledger.OSB) === 0 && (
+                <div className="mt-5 w-full flex justify-center">
+                  No ledger Balance
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+      {loading && <Loading />}
     </div>
   );
 }
