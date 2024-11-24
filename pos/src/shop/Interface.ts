@@ -66,11 +66,12 @@ export interface Ledger {
   _id: string;
   CustomerPhoneNumber: string;
   OrderId: string[];
-  OSB: string;
+  OSB: number;
   businessName: string;
   __v: number;
 }
 export interface OrderDetail {
+  currentBalance: any
   orderPayment: Payment;
   orderDate: string;
   orderPrice: number;

@@ -4,10 +4,12 @@ import { LedgerResponse } from "../Interface";
 import { useSearch } from "../../common_component/menu/SearchContext";
 import OrderTable from "../../common_component/Table/OrderTable";
 import { GridColDef } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 
 function CustomerLedger() {
   const [ledgers, setLedgers] = useState<LedgerResponse[]>([]);
   const { searchTerm } = useSearch();
+  const navigate = useNavigate();
   useEffect(() => {
     getLedgers();
     
@@ -81,6 +83,7 @@ function CustomerLedger() {
     };
     const handleRowClick = (id: string | number) => {
       console.log("Clicked row ID:", id);
+      navigate(`/wallet/${id}`);
     };
   return (
     <div className="w-full h-full p-2 pb-10">

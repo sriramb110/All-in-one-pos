@@ -254,3 +254,12 @@ export const getLedger = async()=>{
     throw error;
   }
 }
+
+export const getLedgerdata = async(number:any)=>{
+  try{
+      const response = await api.get(`/ledger/${number}`)
+    return response;
+  } catch (error) {
+    throw error;
+  }
+}
