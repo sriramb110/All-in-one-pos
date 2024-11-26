@@ -7,7 +7,8 @@ import Loading from "../../common_component/Loading";
 function Orders() {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [qty, setQTY] = useState({ totalQty: "", totalProducts:"" });
 
   useEffect(() => {
     fetchOrder();
@@ -18,6 +19,12 @@ function Orders() {
     try {
      const res = await getOrdersid(id);
      const orderDetails: Order = res.data.order;
+     const totalQty = orderDetails.orderList.reduce(
+       (sum, item) => sum + item.orderQty,
+       0
+     );
+     const totalProducts = orderDetails.orderList.length;
+     setQTY({ totalQty: String(totalQty), totalProducts: String(totalProducts) });
      const sortedOrderList = orderDetails.orderList.sort((a, b) =>
        a.CategoryType.localeCompare(b.CategoryType)
      );
@@ -136,6 +143,10 @@ function Orders() {
               <p>Payment Amount:</p>
               <p>{order.payment.reservedPrice}</p>
             </li>
+            <li>
+              <p>Balance Amount:</p>
+              <p>{-order.payment.reservedPrice + Number(order.totalPrice)}</p>
+            </li>
           </ul>
         </div>
         <div className="w-full bg-gray-100 p-2 border rounded-lg shadow-inner">
@@ -147,15 +158,15 @@ function Orders() {
             </li>
             <li>
               <p>Order Status:</p>
-              <p></p>
+              <p>-</p>
             </li>
             <li>
               <p>Total Qty:</p>
-              <p></p>
+              <p>{qty.totalQty}</p>
             </li>
             <li>
               <p>Total Products:</p>
-              <p></p>
+              <p>{qty.totalProducts}</p>
             </li>
           </ul>
         </div>

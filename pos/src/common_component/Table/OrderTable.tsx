@@ -1,5 +1,5 @@
 import { Paper } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import React, { useState } from "react";
 
 interface Props {
@@ -15,13 +15,20 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
     pageSize: 30,
   });
 
-  const handleSelectionChange = (selectionModel: any) => {
+  const handleSelectionChange = (selectionModel: GridRowSelectionModel) => {
     const selectedData = rows.filter((row) => selectionModel.includes(row.id));
     onSelectionChange(selectedData);
   };
 
   return (
-    <Paper sx={{ height: "100%", width: "auto" }}>
+    <Paper
+      sx={{
+        height: "100%",
+        width: "100%", 
+        minHeight: 400,
+        padding: 2,
+      }}
+    >
       <DataGrid
         rows={rows}
         columns={columns}
@@ -30,6 +37,7 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[30, 50]}
         // checkboxSelection
+        disableRowSelectionOnClick
         onRowSelectionModelChange={(newSelection) =>
           handleSelectionChange(newSelection)
         }
@@ -38,7 +46,13 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
             onRowClick(params.id);
           }
         }}
-        sx={{ border: 1 }}
+        sx={{
+          border: 1,
+          width: "100%", 
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "#f5f5f5",
+          },
+        }}
       />
     </Paper>
   );

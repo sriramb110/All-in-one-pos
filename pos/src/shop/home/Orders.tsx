@@ -30,7 +30,7 @@ function Orders({ products, selectproduct }: OrdersProps) {
               <div
                 key={product._id}
                 onClick={() => selectproduct(product._id)}
-                className="px-2 py-3 w-28 h-28 flex flex-col justify-between items-center border-2 border-gray-600 rounded-md bg-indigo-500 text-white text-sm shadow-md cursor-pointer hover:bg-indigo-600"
+              className="px-2 py-3 w-28 h-28 flex flex-col justify-between items-center border-2 border-gray-600 rounded-md bg-indigo-500 text-white text-sm shadow-md cursor-pointer hover:bg-indigo-600  hover:text-cyan-50 responsive-container"
               >
                 <p className="font-semibold">{product.productName}</p>
                 <p className="text-sm">Price: {product.amount}</p>

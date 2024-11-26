@@ -16,6 +16,7 @@ import {
 import { Link } from "react-router-dom";
 import Orderspopup from "./Orderspopup";
 import Loading from "../../common_component/Loading";
+import { Autocomplete, TextField } from "@mui/material";
 
 function Home() {
   const [products, setProducts] = useState<ProductInterface[]>([]);
@@ -31,6 +32,7 @@ function Home() {
   const [customer, setCustomer] = useState<Customer[]>([]);
   const [selectCus, setSelectCus] = useState<Customer | null | undefined>();
   const [loading, setLoading] = useState(false);
+  const [defoltset, setDefoltset] = useState<{ label: string; value: string } | null>({ label: 'All Products', value:'' });
 
   useEffect(() => {
     getProduct();
@@ -168,22 +170,45 @@ function Home() {
     setConfirmOrder(false);
   };
 
+    const productData = categorys.map((i) => ({
+      label: i.name,
+      value: i._id,
+    }));
+  // setDefoltset(productData[0])
+
   return (
     <div className="w-full h-full flex flex-col -mt-3 pb-5 bg-gray-100">
       <div className="flex flex-grow w-full h-5/6 p-4">
         <div className="w-full pr-4 h-full flex flex-col">
-          <div className="W-full flex justify-between items-center mx-2 mt-3">
-            <h1 className="text-2xl font-semibold">
+          <div className="sidebar W-full flex justify-between items-center mx-2 mt-3">
+            <h1 className="text-2xl font-semibold ">
               Category Type: {selectCategory?.name || "Select a Category"}
             </h1>
             <Link
               to={"/setting/products"}
-              className="px-2 mx-2 my-1 w-64 h-10 flex flex-col border-2 justify-center items-center border-gray-600 rounded-md bg-indigo-500 text-white text-xl shadow-md cursor-pointer"
+              className=" px-2 mx-2 my-1 w-64 h-10 flex flex-col border-2 justify-center items-center border-gray-600 rounded-md bg-indigo-500 text-white text-xl shadow-md cursor-pointer"
             >
               + Products or Category
             </Link>
           </div>
-          <div className="flex-1 mt-5 w-full  overflow-auto border rounded-md p-4 bg-white shadow-md">
+          <div className="openpopup">
+            <Autocomplete
+              className="w-80 mx-5 mt-2 mb-2"
+              options={productData}
+              value={defoltset}
+              getOptionLabel={(option) => option.label}
+              renderInput={(params) => (
+              <TextField {...params} label="Filter by Category" />
+              )}
+              onChange={(event, newValue) => {
+                filtercategory(newValue?.value || null);
+                setDefoltset(newValue);
+              }}
+            />
+
+          </div>
+          <div className="flex-1 mt-5 w-full  overflow-hidden border rounded-md py-2 bg-white shadow-md">
+            <h1 className="ml-3">Products List</h1>
             <Orders products={filterProduct} selectproduct={selectedProduct} />
           </div>
         </div>
@@ -195,12 +220,13 @@ function Home() {
               listOfProducts={productList}
               clearall={clear}
               allProduct={allProduct}
+              confirmOrders={confirmOrders}
             />
           </div>
         </div>
       </div>
 
-      <div className="w-full h-1/6 p-4 border-t shadow-md overflow-auto">
+      <div className="w-full h-1/6 p-4 border-t shadow-md overflow-auto sidebar">
         <Confirm
           categorys={categorys}
           category={filtercategory}

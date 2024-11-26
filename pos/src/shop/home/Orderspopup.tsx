@@ -166,17 +166,17 @@ function Orderspopup({
               }}
             >
               <p className="-ml-2 -mt-1 font-semibold mb-1">
-                Customer details:
+                Customer details
               </p>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p className="w-20">Customer Name</p>
                 <p>{selectCustomer.customerName}</p>
               </div>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p className="w-20">Phone Number</p>
                 <p>{selectCustomer.phoneNumber}</p>
               </div>
-              <div className="flex  w-full justify-between">
+              <div className="flex  w-full justify-between sidebar">
                 <p className="w-20">OSB</p>
                 <p>{Number(OSB).toFixed(2)} </p>
               </div>
@@ -188,13 +188,13 @@ function Orderspopup({
               onClick={billdata}
             >
               <p className="-ml-2 -mt-1 font-semibold">Order Details:</p>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p>Total Price</p>
                 <p className="font-semibold text-3xl text-red-600">
                   {totalAmount.toFixed(2)}{" "}
                 </p>
               </div>
-              <div className="flex w-full justify-between">
+              <div className="flex w-full justify-between sidebar">
                 <p>Total Qty</p>
                 <p>{totalQty.toFixed(2)} </p>
               </div>
@@ -206,19 +206,19 @@ function Orderspopup({
               onClick={payview}
             >
               <p className="-ml-2 -mt-1 font-semibold">Payment Details:</p>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p>Payment Mode</p>
                 <p>{paymentMode.paymentMethod}</p>
               </div>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p>Discount Price</p>
                 <p>{paymentMode.discount}</p>
               </div>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p>Resved Price</p>
                 <p>{paymentMode.reservedPrice}</p>
               </div>
-              <div className="flex  w-full justify-between">
+              <div className="flex  w-full justify-between sidebar">
                 <p>Balance price</p>
                 <p>
                   {totalAmount -
@@ -282,13 +282,13 @@ function Orderspopup({
           {!orderCheck && !billVerfy && (
             <div className="w-5/6 bg-white p-4 border rounded-md shadow-md h-auto cursor-not-allowed">
               <p className="-ml-2 -mt-1 font-semibold">Order Details:</p>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p>Total Price</p>
                 <p className="font-semibold text-3xl text-red-600">
                   {totalAmount}
                 </p>
               </div>
-              <div className="flex w-full justify-between">
+              <div className="flex w-full justify-between sidebar">
                 <p>Total Qty</p>
                 <p>{totalQty}</p>
               </div>
@@ -297,15 +297,15 @@ function Orderspopup({
           {!paymentMode && !paymentCheck && (
             <div className="w-5/6 mt-1 bg-white p-4 border rounded-md shadow-md h-auto cursor-not-allowed">
               <p className="-ml-2 -mt-1 font-semibold">Payment Details:</p>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between overflow-hidden sidebar">
                 <p>Payment Mode</p>
-                <p>Card/Cash</p>
+                <p>Card / Cash</p>
               </div>
-              <div className="flex border-b-2 w-full justify-between">
+              <div className="flex border-b-2 w-full justify-between sidebar">
                 <p>Resved Price</p>
                 <p>0</p>
               </div>
-              <div className="flex  w-full justify-between">
+              <div className="flex  w-full justify-between sidebar">
                 <p>Balance price</p>
                 <p>-</p>
               </div>

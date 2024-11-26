@@ -17,7 +17,12 @@ function Table({ rows, columns, onSelectionChange }: Props) {
   };
 
   return (
-    <Paper sx={{ height: '100%', width: 'auto' }}>
+    <Paper sx={{
+      height: "100%",
+      width: "100%",
+      minHeight: 400,
+      padding: 2,
+    }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -27,7 +32,13 @@ function Table({ rows, columns, onSelectionChange }: Props) {
         pageSizeOptions={[10 , 30, 50]}
         checkboxSelection
         onRowSelectionModelChange={(newSelection) => handleSelectionChange(newSelection)}
-        sx={{ border: 1 }}
+        sx={{
+          border: 1,
+          width: "100%",
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "#f5f5f5",
+          },
+        }}
       />
     </Paper>
   );

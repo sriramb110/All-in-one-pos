@@ -11,7 +11,7 @@ function OverallOrders() {
   const [orderList, setOrderList] = useState<Order[]>([]);
   const { searchTerm } = useSearch();
   const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -23,7 +23,7 @@ function OverallOrders() {
       .then((res) => {
         const ordersData: Order[] = res.data.orders;
         setOrderList(ordersData);
-         setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
@@ -31,9 +31,9 @@ function OverallOrders() {
       });
   };
 
-   if (loading) {
-     return <Loading />;
-   }
+  if (loading) {
+    return <Loading />;
+  }
 
   const filteredData = orderList
     .filter(
@@ -44,9 +44,7 @@ function OverallOrders() {
         order.Customerdata.phoneNumber
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        order.orderId
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
+        order.orderId.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .map((order, index) => ({
       id: order._id,
@@ -63,36 +61,36 @@ function OverallOrders() {
       field: "serial",
       headerName: "S.No",
       type: "number",
-      width: 60,
+      flex: 0.3, // Adjust this ratio for responsiveness
       sortable: false,
       disableColumnMenu: true,
     },
     {
       field: "orderId",
       headerName: "Order Id",
-      width: 300,
+      flex: 1,
     },
     {
       field: "customerName",
       headerName: "Customer Name",
-      width: 300,
+      flex: 1,
     },
     {
       field: "phoneNumber",
       headerName: "Phone Number",
-      width: 130,
+      flex: 0.7,
     },
     {
       field: "orderDate",
-      headerName: " Order Date | Time",
-      width: 200,
+      headerName: "Order Date | Time",
+      flex: 1,
       type: "number",
     },
     {
       field: "orderAmount",
       headerName: "Order Amount",
       type: "number",
-      width: 150,
+      flex: 0.7,
     },
   ];
 
@@ -106,7 +104,7 @@ function OverallOrders() {
 
   return (
     <div className="w-full h-full mt-10 flex justify-center">
-      <div className="h-5/6 flex w-auto ">
+      <div className="h-5/6 w-5/6 flex justify-center">
         <OrderTable
           rows={filteredData}
           columns={columns}

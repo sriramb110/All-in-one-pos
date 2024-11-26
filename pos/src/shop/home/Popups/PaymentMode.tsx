@@ -84,7 +84,7 @@ function PaymentMode({
                 setReservedPrice(0);
               }}
             />
-            <p className="mx-2">Pay Later</p>
+            <p className="mx-2">Later</p>
           </div>
           <div className="flex">
             <input

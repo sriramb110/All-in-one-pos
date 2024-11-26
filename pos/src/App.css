@@ -87,13 +87,34 @@ h1 {
 }
 
 @media (max-width: 1199px) {
-  .menu-icons {
+  .menu-icons,.sidebar {
     display: none;
+  }
+  .overdata{
+    height: 70%;
+  }
+  .responsive-container {
+    width: 100%;
+    height: 2rem; 
+    flex-direction: row;
+    background-color: rgb(206, 206, 206);
+    color: black;
+  }
+  .reversdata{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding-right:5px ;
+  }
+  .reversdata2{
+    flex-direction: column;
+
   }
 }
 
 @media (min-width: 1199px) {
-  .max-menu {
+  .max-menu,.openpopup {
     display: none;
   }
 
@@ -111,7 +132,8 @@ h1 {
 
   .menu,
   .setting-menu,
-  .header-search {
+  .header-search
+ {
     display: none;
   }
 }
@@ -188,4 +210,10 @@ ul li {
 * {
   scrollbar-width: thin;
   scrollbar-color: #c0c0c09d #f1f1f1;
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }

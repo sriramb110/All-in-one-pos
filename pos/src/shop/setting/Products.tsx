@@ -76,15 +76,15 @@ function Products() {
     })
   }
   const columns: GridColDef[] = [
-    { field: 'serial', headerName: 'S.No', type: 'number', width: 60, sortable: false, disableColumnMenu: true, renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1 },
-    { field: 'productName', headerName: 'Product Name', width: 300 },
+    { field: 'serial', headerName: 'S.No', type: 'number', flex: 0.3, sortable: false, disableColumnMenu: true, renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1 },
+    { field: 'productName', headerName: 'Product Name', flex: 1, },
     {
-      field: 'categoryType', headerName: 'Category Type', width: 250, renderCell: (params) => {
+      field: 'categoryType', headerName: 'Category Type', flex: 1,  renderCell: (params) => {
         const category = getcategory.find((cat) => cat._id === params.value);
         return category ? category.name : 'Unknown';
       },
     },
-    { field: 'amount', headerName: 'Price Value', type: 'number', width: 200 }
+    { field: 'amount', headerName: 'Price Value', type: 'number', flex: 1 }
   ];
 
   const clear = () => {
@@ -497,7 +497,7 @@ function Products() {
           </div>
         )}
       </div>
-      <div className='w-full p-5 flex h-4/6 justify-center'>
+      <div className='w-5/6 max-w-3xl p-5 flex h-4/6 justify-center'>
         <Table rows={filteredData} columns={columns} onSelectionChange={handleSelectedData} />
       </div>
     </div>

@@ -43,26 +43,26 @@ function OrderDetails({ orderList, ordersConfirm }: Props) {
   return (
     <div className="w-full h-full flex justify-center">
       <div className="w-4/6 h-5/6 bg-white border rounded-md shadow-md p-2 overflow-hidden">
-        <div className="w-full h-26 flex justify-between pb-1 border-b-2">
-          <div className="flex flex-col items-center font-semibold text-xl">
+        <div className="w-full h-26 flex justify-between pb-1 border-b-2  reversdata2">
+          <div className="flex flex-col items-center font-semibold text-xl  reversdata">
             <p>Total Order Qty</p>
             <p>{totalQty}</p>
           </div>
-          <div className="flex flex-col items-center font-semibold text-xl">
+          <div className="flex flex-col items-center font-semibold text-xl  reversdata">
             <p>Total Order Products</p>
             <p>{productQty}</p>
           </div>
-          <div className="flex flex-col items-end font-semibold text-xl">
+          <div className="flex flex-col items-end font-semibold text-xl  reversdata">
             <p>Order Price</p>
-            <p className="text-red-600 text-s text-shadow-lg text-4xl">
+            <p className="text-red-600 text-s text-shadow-lg text-3xl">
               {totalAmount.toFixed(2)}{" "}
             </p>
           </div>
         </div>
-        <div className="w-full h-3/4 overflow-auto p-2">
+        <div className="w-full h-4/5 overflow-auto p-2 overdata">
           <div className="flex w-full bg-neutral-300 static">
             <p className="w-16">s.no</p>
-            <p className="w-full">Product Name(Category type)</p>
+            <p className="w-full">Product Name (Category type)</p>
             <p className="w-20 flex justify-end">Price</p>
             <p className="w-20 flex justify-end">Qty</p>
             <p className="w-36 flex justify-end">Total Price</p>
@@ -81,7 +81,7 @@ function OrderDetails({ orderList, ordersConfirm }: Props) {
             </div>
           ))}
         </div>
-          <div className="w-full h-16 px-2 border-t-2 flex justify-center">
+          <div className="w-full h-14 px-2 border-t-2 flex justify-center">
             <button className="confirm" onClick={() => ordersConfirm()}>
               Order Confirm
             </button>

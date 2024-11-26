@@ -34,6 +34,9 @@ function Headers() {
         if (location.pathname.startsWith("/order/")) {
           return "POS Order - Details";
         }
+        if (location.pathname.startsWith("/wallet/")) {
+          return "POS Ledger - Details";
+        }
         switch (location.pathname) {
           case "/setting/products":
             return "Setting - Products";
@@ -57,7 +60,7 @@ function Headers() {
     return (
         <div className='w-auto h-16 bg-cyan-600 p-4 text-white flex'>
             <div className='pl-5 flex justify-between w-screen pr-10'>
-                <h1 className='text-3xl ml-2 w-72'>{headerName()}</h1>
+                <h1 className='text-3xl ml-2 w-auto'>{headerName()}</h1>
                 <input
                     className='bg-white w-1/4 rounded-full px-4  text-black header-search'
                     id=""

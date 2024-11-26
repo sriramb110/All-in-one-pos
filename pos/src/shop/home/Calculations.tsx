@@ -6,6 +6,7 @@ type OrderProps = {
   listOfProducts: (orderlists: ProductSelected[]) => void;
   clearall: () => void;
   allProduct: any;
+  confirmOrders:() => void;
 };
 
 function Calculations({
@@ -13,6 +14,7 @@ function Calculations({
   listOfProducts,
   clearall,
   allProduct,
+  confirmOrders,
 }: OrderProps) {
   const [orderlists, setOrderlists] = useState<ProductSelected[]>([]);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -100,7 +102,7 @@ function Calculations({
       <div className="w-full h-1/6 border rounded-md p-2 flex justify-center items-center flex-col bg-white shadow-md">
         <div className="w-full flex justify-between">
           <p className="text-lg font-semibold">Total Order Price:</p>
-          <button onClick={clearall} className="text-red-600 font-bold">
+          <button onClick={clearall} className="text-red-600 font-bold openpopup">
             Clear Price
           </button>
         </div>
@@ -108,7 +110,6 @@ function Calculations({
           {totalOrderPrice.toFixed(2)}
         </h1>
       </div>
-
       <div className="flex-1 overflow-auto border rounded-md p-4 bg-white shadow-md">
         <p className="text-xl font-semibold mb-2 sticky top-0 bg-white z-10">
           Order Product List:
@@ -164,6 +165,11 @@ function Calculations({
             </p>
           )}
         </div>
+      </div>
+      <div className="w-full h-10 flex justify-center openpopup">
+        <button className={`w-full h-full border rounded-md bg-green-500 text-white text-2xl ${
+           orderlists.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`} disabled={orderlists.length === 0} onClick={() => confirmOrders()}>CHECK OUT</button>
       </div>
     </div>
   );

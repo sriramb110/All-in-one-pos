@@ -61,10 +61,10 @@ function Customers() {
   );
 
   const columns: GridColDef[] = [
-    { field: 'serial', headerName: 'S.No', type: 'number', width: 60, sortable: false, disableColumnMenu: true, renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1 },
-    { field: 'customerName', headerName: 'Customer Name', width: 300 },
-    { field: 'phoneNumber', headerName: 'Phone Number', width: 300 },
-    { field: 'emailId', headerName: 'Email ID', width: 400 }
+    { field: 'serial', headerName: 'S.No', type: 'number', flex: 0.3,  sortable: false, disableColumnMenu: true, renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1 },
+    { field: 'customerName', headerName: 'Customer Name', flex: 1, },
+    { field: 'phoneNumber', headerName: 'Phone Number', flex: 1, },
+    { field: 'emailId', headerName: 'Email ID', flex: 1, }
   ]
 
   const handleSelectedData = (selectedRows: Customer[]) => {
@@ -235,7 +235,7 @@ function Customers() {
           iconMap["addIcon"]
         )}
       </div>
-      <div className="w-full p-5 flex h-4/6 justify-center">
+      <div className="w-5/6 max-w-4xl p-5 flex h-4/6 justify-center">
         <Table
           rows={filteredData}
           columns={columns}
