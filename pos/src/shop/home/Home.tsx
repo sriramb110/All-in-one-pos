@@ -33,6 +33,7 @@ function Home() {
   const [selectCus, setSelectCus] = useState<Customer | null | undefined>();
   const [loading, setLoading] = useState(false);
   const [defoltset, setDefoltset] = useState<{ label: string; value: string } | null>({ label: 'All Products', value:'' });
+  const [totalOrderAmount,setTotalOrderAmount] = useState<number>(0)
 
   useEffect(() => {
     getProduct();
@@ -176,6 +177,10 @@ function Home() {
     }));
   // setDefoltset(productData[0])
 
+  const totalAmount = (orderAmount:number)=>{
+    setTotalOrderAmount(orderAmount)
+  }
+
   return (
     <div className="w-full h-full flex flex-col -mt-3 pb-5 bg-gray-100">
       <div className="flex flex-grow w-full h-5/6 p-4">
@@ -191,7 +196,7 @@ function Home() {
               + Products or Category
             </Link>
           </div>
-          <div className="openpopup">
+          <div className="openpopup w-full flex justify-between items-center">
             <Autocomplete
               className="w-80 mx-5 mt-2 mb-2"
               options={productData}
@@ -205,6 +210,10 @@ function Home() {
                 setDefoltset(newValue);
               }}
             />
+            <div className="w-60 flex justify-end gap-2 bg-gray-50 p-2 rounded-lg border-gray-300 border shadow-inner">
+              <p className="font-bold w-2/6">Order Price : </p>
+              <p className="font-semibold text-4xl w-4/6 text-red-500">{totalOrderAmount.toFixed(2)}</p>
+            </div>
 
           </div>
           <div className="flex-1 mt-5 w-full  overflow-hidden border rounded-md py-2 bg-white shadow-md">
@@ -221,6 +230,7 @@ function Home() {
               clearall={clear}
               allProduct={allProduct}
               confirmOrders={confirmOrders}
+              totalAmount={totalAmount}
             />
           </div>
         </div>

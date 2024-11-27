@@ -7,6 +7,7 @@ type OrderProps = {
   clearall: () => void;
   allProduct: any;
   confirmOrders:() => void;
+  totalAmount:(amount:number)=>void
 };
 
 function Calculations({
@@ -15,6 +16,7 @@ function Calculations({
   clearall,
   allProduct,
   confirmOrders,
+  totalAmount
 }: OrderProps) {
   const [orderlists, setOrderlists] = useState<ProductSelected[]>([]);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -97,9 +99,11 @@ function Calculations({
     return acc + amount * quantity;
   }, 0);
 
+  totalAmount(totalOrderPrice)
+
   return (
     <div className="w-full h-full overflow-hidden flex flex-col gap-2">
-      <div className="w-full h-1/6 border rounded-md p-2 flex justify-center items-center flex-col bg-white shadow-md">
+      <div className="w-full h-1/6 border rounded-md p-2 flex justify-center items-center flex-col bg-white shadow-md sidebar">
         <div className="w-full flex justify-between">
           <p className="text-lg font-semibold">Total Order Price:</p>
           <button onClick={clearall} className="text-red-600 font-bold openpopup">
@@ -110,7 +114,7 @@ function Calculations({
           {totalOrderPrice.toFixed(2)}
         </h1>
       </div>
-      <div className="flex-1 overflow-auto border rounded-md p-4 bg-white shadow-md">
+      <div className="flex-1 overflow-auto border rounded-md px-1 bg-white shadow-md">
         <p className="text-xl font-semibold mb-2 sticky top-0 bg-white z-10">
           Order Product List:
         </p>
