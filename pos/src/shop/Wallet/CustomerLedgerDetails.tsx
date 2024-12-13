@@ -40,7 +40,7 @@ function CustomerLedgerDetails() {
   const calculateBalances = () => {
     let runningBalance = 0;
     return ledger?.orderDetails.map((item, index) => {
-      const perOrderBalance = item.orderPrice - item.orderPayment.reservedPrice;
+      const perOrderBalance = item.orderPrice - (item.orderPayment.reservedPrice + item.orderPayment.discount) ;
       runningBalance += perOrderBalance;
       return { ...item, perOrderBalance, runningBalance };
     });
@@ -294,7 +294,7 @@ function CustomerLedgerDetails() {
                     {item.orderPrice}
                   </dt>
                   <dt className="flex-1 h-full flex justify-end overflow-hidden">
-                    {item.orderPayment.reservedPrice}
+                    {item.orderPayment.reservedPrice + item.orderPayment.discount}
                   </dt>
                   <dt className="flex-1 h-full flex justify-end overflow-hidden">
                     {item.perOrderBalance.toFixed(2)}

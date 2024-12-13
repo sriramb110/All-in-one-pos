@@ -10,6 +10,7 @@ import ThermalPrinterTest from './ThermalPrinterTest';
 import Orders from '../shop/Orders/Orders';
 import CustomerLedger from '../shop/Wallet/CustomerLedger';
 import CustomerLedgerDetails from '../shop/Wallet/CustomerLedgerDetails';
+import Profile from '../common_component/Profile';
 
 function ShopNavigator() {
   return (
@@ -28,6 +29,7 @@ function ShopNavigator() {
               <Route path="/order/:id" element={<Orders />} />
               <Route path="/wallet" element={<CustomerLedger />} />
               <Route path="/wallet/:id" element={<CustomerLedgerDetails />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/data" element={<ThermalPrinterTest />} />
             </Routes>
           </div>

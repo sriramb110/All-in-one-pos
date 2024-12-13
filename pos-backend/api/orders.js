@@ -74,7 +74,7 @@ router.post("/", authenticateToken, async (req, res) => {
 
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const businessName = req.user.business; 
+    const businessName = req.user.business;
 
     if (!businessName) {
       return res.status(400).json({ error: "Missing business name in token." });
@@ -82,7 +82,7 @@ router.get("/", authenticateToken, async (req, res) => {
 
     // Fetch orders by business name
     const orders = await Orders.find({
-      "Customerdata.businessName": businessName,
+      businessName: businessName,
     });
 
     if (orders.length === 0) {
@@ -96,12 +96,13 @@ router.get("/", authenticateToken, async (req, res) => {
       orders,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching orders:", error);
     res
       .status(500)
       .json({ error: "An error occurred while fetching the orders." });
   }
 });
+
 
 router.get("/:id", authenticateToken, async (req, res) => {
   try {
@@ -110,11 +111,9 @@ router.get("/:id", authenticateToken, async (req, res) => {
     if (!businessName) {
       return res.status(400).json({ error: "Missing business name in token." });
     }
-
-    // Fetch a specific order by ID and ensure it belongs to the business
     const order = await Orders.findOne({
       _id: req.params.id,
-      "Customerdata.businessName": businessName,
+      businessName: businessName,
     });
 
     if (!order) {

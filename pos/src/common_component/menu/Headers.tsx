@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 import iconMap from '../../assets/Icons';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSearch } from './SearchContext';
 
 function Headers() {
     const {searchTerm, setSearchTerm} = useSearch();
-    const [major, setMajor] = useState<boolean>(false);
     const [today, setToday] = useState({
         date: "",
         time: ""
     });
+    const navigator= useNavigate()
     const location = useLocation();
     useEffect(() => {
         const updateTime = () => {
@@ -69,7 +69,7 @@ function Headers() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <div className='flex'>
-                    <IconButton aria-label="" onClick={() => setMajor(!major)}>
+                    <IconButton aria-label="" onClick={() => navigator('/profile')}>
                         {icons(iconMap['profile'])}
                     </IconButton>
                     <div className='-mt-2 w-24 flex justify-end'>

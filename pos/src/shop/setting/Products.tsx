@@ -497,7 +497,7 @@ function Products() {
           </div>
         )}
       </div>
-      <div className='w-5/6 max-w-3xl p-5 flex h-4/6 justify-center'>
+      <div className='w-full p-5 flex h-4/6 justify-center'>
         <Table rows={filteredData} columns={columns} onSelectionChange={handleSelectedData} />
       </div>
     </div>

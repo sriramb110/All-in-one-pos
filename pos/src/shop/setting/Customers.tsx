@@ -235,7 +235,7 @@ function Customers() {
           iconMap["addIcon"]
         )}
       </div>
-      <div className="w-5/6 max-w-4xl p-5 flex h-4/6 justify-center">
+      <div className="w-full p-5 flex h-4/6 justify-center">
         <Table
           rows={filteredData}
           columns={columns}
