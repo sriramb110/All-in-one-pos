@@ -99,7 +99,7 @@ function CustomerLedgerDetails() {
           const payment = {
             paymentMethod: payMode,
             discount: data.discount,
-            reservedPrice: priceS,
+            reservedPrice: data.reservedPrice+priceS,
           };
           console.log(payment);
           priceS = 0;
