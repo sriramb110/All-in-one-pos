@@ -1,123 +1,85 @@
-import React, { useRef } from 'react';
-import downloadImage from '../assets/download.png'
+import React, { useRef } from "react";
+import downloadImage from "../assets/download.png";
+import MyProfileComponent from "../shop/profile/myProfile";
+import WorkProfileComponent from "../shop/profile/workProfile";
+import ProfileThemeComponent from "../shop/profile/profileTheme";
 
-function Profile() {
+const Profile: React.FC = () => {
     const firstContainerRef = useRef<HTMLDivElement>(null);
     const secondContainerRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const MyProfile = () => {
-        if (firstContainerRef.current) {
-            const parentContainer = document.querySelector('.w-full.h-full.overflow-auto');
+    const scrollToElement = (elementRef: React.RefObject<HTMLDivElement>) => {
+        if (elementRef.current) {
+            const parentContainer = document.querySelector(".w-full.h-full.overflow-auto");
             const yOffset = -64;
             const yPosition =
-                firstContainerRef.current.getBoundingClientRect().top +
+                elementRef.current.getBoundingClientRect().top +
                 (parentContainer ? parentContainer.scrollTop : window.scrollY) +
                 yOffset;
 
             if (parentContainer) {
-                parentContainer.scrollTo({ top: yPosition, behavior: 'smooth' });
+                parentContainer.scrollTo({ top: yPosition, behavior: "smooth" });
             } else {
-                window.scrollTo({ top: yPosition, behavior: 'smooth' });
+                window.scrollTo({ top: yPosition, behavior: "smooth" });
             }
         }
     };
 
-    const handleScrollToFirstContainer = () => {
-        if (secondContainerRef.current) {
-            const parentContainer = document.querySelector('.w-full.h-full.overflow-auto');
-            const yOffset = -64;
-            const yPosition =
-                secondContainerRef.current.getBoundingClientRect().top +
-                (parentContainer ? parentContainer.scrollTop : window.scrollY) +
-                yOffset;
-
-            if (parentContainer) {
-                parentContainer.scrollTo({ top: yPosition, behavior: 'smooth' });
-            } else {
-                window.scrollTo({ top: yPosition, behavior: 'smooth' });
-            }
-        }
-    };
-
-    const Profile = () => {
-        if (containerRef.current) {
-            const parentContainer = document.querySelector('.w-full.h-full.overflow-auto');
-            const yOffset = -64;
-            const yPosition =
-                containerRef.current.getBoundingClientRect().top +
-                (parentContainer ? parentContainer.scrollTop : window.scrollY) +
-                yOffset;
-
-            if (parentContainer) {
-                parentContainer.scrollTo({ top: yPosition, behavior: 'smooth' });
-            } else {
-                window.scrollTo({ top: yPosition, behavior: 'smooth' });
-            }
-        }
-    };
-
+    const handleScrollToProfile = () => scrollToElement(containerRef);
+    const handleScrollToWorkProfile = () => scrollToElement(firstContainerRef);
+    const handleScrollToProfileTheme = () => scrollToElement(secondContainerRef);
 
     return (
         <div className="w-full h-full overflow-auto flex">
-            <div className='fixed w-72 flex flex-col justify-start items-center border border-gray-300 rounded-e-3xl pr-1' style={{height:'93%'}}>
-                <img src={downloadImage} alt="Description of image" className='w-52 h-52 rounded-full '/>
-
+            <div
+                className="fixed flex flex-col justify-start items-center bg-blue-200 text-white rounded-e-3xl"
+                style={{ height: "93%", width: "12%" }}
+            >
+                <img src={downloadImage} alt="Profile" className="w-fit h-fit mt-4 rounded-full border-4 border-white shadow-lg" />
                 <button
-                    onClick={Profile}
-                    className="relative w-full flex justify-end px-4 py-2 mt-4 overflow-hidden group bg-gradient-to-r from-gray-200 to-blue-700 text-white rounded-e-full "
+                    onClick={handleScrollToProfile}
+                    className="relative w-5/6 flex justify-center items-center px-4 py-3 mt-6 text-sm font-bold transition-all duration-300 rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-700"
                 >
-                    <span className="absolute inset-0 bg-blue-200 transition-transform duration-200 -translate-x-full group-hover:translate-x-0"></span>
-                    <span className="absolute inset-0 bg-blue-500 transition-transform duration-1000 translate-x-full group-hover:translate-x-0"></span>
                     <span className="relative z-10">My Profile</span>
                 </button>
                 <button
-                    onClick={MyProfile}
-                    className="relative w-full flex justify-end px-4 py-2 mt-4 overflow-hidden group bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-e-full "
+                    onClick={handleScrollToWorkProfile}
+                    className="relative w-5/6 flex justify-center items-center px-4 py-3 mt-6 text-sm font-bold transition-all duration-300 rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-700"
                 >
-                    <span className="absolute inset-0 bg-blue-200 transition-transform duration-200 -translate-x-full group-hover:translate-x-0"></span>
-                    <span className="absolute inset-0 bg-blue-500 transition-transform duration-1000 translate-x-full group-hover:translate-x-0"></span>
                     <span className="relative z-10">Work Profile</span>
                 </button>
                 <button
-                    onClick={handleScrollToFirstContainer}
-                    className="relative w-full flex justify-end px-4 py-2 mt-4 overflow-hidden group bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-e-full "
+                    onClick={handleScrollToProfileTheme}
+                    className="relative w-5/6 flex justify-center items-center px-4 py-3 mt-6 text-sm font-bold transition-all duration-300 rounded-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-700"
                 >
-                    <span className="absolute inset-0 bg-blue-200 transition-transform duration-200 -translate-x-full group-hover:translate-x-0"></span>
-                    <span className="absolute inset-0 bg-blue-500 transition-transform duration-1000 translate-x-full group-hover:translate-x-0"></span>
-                    <span className="relative z-10">Profile Theme</span>
+                    <span className="relative z-10">Theme</span>
                 </button>
-
             </div>
             <div ref={containerRef} className="flex flex-col w-full h-fit items-center overflow-hidden">
-                <div className="h-screen w-full flex items-center justify-start bg-gradient-to-r from-gray-200 to-blue-200">
-                    <div className='w-72 flex h-full rounded-e-3xl'></div>
-                    <div className='w-5/6'>
-                        profile
+                <div className="h-screen w-full flex items-center justify-start bg-gradient-to-r from-blue-100 to-blue-200">
+                    <div style={{ width: "11%" }}></div>
+                    <div className="w-full h-full pl-2">
+                        <MyProfileComponent />
                     </div>
-                    
                 </div>
                 <div
                     ref={firstContainerRef}
-                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r from-gray-200 bg-red-100 "
+                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r  from-blue-100 to-blue-200"
                 >
-                    <div className='w-72 flex h-full rounded-e-3xl'></div>
-                    <div className='w-5/6'>
-                       My profile
-                    </div>
+                    <div style={{ width: "11%" }}></div>
+                    <div className="w-full h-full pl-2"><WorkProfileComponent /></div>
                 </div>
                 <div
                     ref={secondContainerRef}
-                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r from-gray-200 bg-neutral-200 "
+                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r  from-blue-100 to-blue-200"
                 >
-                    <div className='w-72 flex h-full rounded-e-3xl'></div>
-                    <div className='w-5/6'>
-                        profile Theme
-                    </div>
+                    <div style={{ width: "11%" }}></div>
+                    <div className="w-full h-full pl-2"><ProfileThemeComponent /></div>
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default Profile;
