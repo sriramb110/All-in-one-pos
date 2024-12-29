@@ -27,12 +27,11 @@ function CustomerLedgerDetails() {
     getLedgerdata(id)
       .then((res) => {
         const ledugerData: LedgerResponse = res.data;
-        console.log(ledugerData)
         setLedger(ledugerData);
         setLoading(false);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
         setLoading(false);
       });
   };
@@ -40,7 +39,9 @@ function CustomerLedgerDetails() {
   const calculateBalances = () => {
     let runningBalance = 0;
     return ledger?.orderDetails.map((item, index) => {
-      const perOrderBalance = item.orderPrice - (item.orderPayment.reservedPrice + item.orderPayment.discount) ;
+      const perOrderBalance =
+        item.orderPrice -
+        (item.orderPayment.reservedPrice + item.orderPayment.discount);
       runningBalance += perOrderBalance;
       return { ...item, perOrderBalance, runningBalance };
     });
@@ -59,6 +60,7 @@ function CustomerLedgerDetails() {
   const payments = () => {
     setLoading(true);
     const price = Number(ledger?.ledger.OSB) - reservedPrice;
+    console.log(price)
     patchledger(id, price)
       .then((res) => {console.log(res); setPopup(!true);})
       .catch((error) => {
@@ -66,7 +68,8 @@ function CustomerLedgerDetails() {
         setPopup(!true);
       });
 
-    // eslint-disable-next-line array-callback-return
+    let priceS = reservedPrice;
+
     ledger?.orderDetails.map((order) => {
       const data = {
         orderPrice: order.orderPrice,
@@ -74,37 +77,41 @@ function CustomerLedgerDetails() {
         balance: order.orderPrice - order.orderPayment?.reservedPrice,
         discount: order.orderPayment.discount,
       };
-      const pay = -data.balance + reservedPrice;
+      let pay = -data.balance + priceS;
+      console.log(data.balance)
       setReservedPrice(pay);
-      if (0 <= pay) {
-        if (data.balance !== 0) {
+      console.log(priceS);
+      if (priceS >= 0) {
+        if (data.balance <= priceS && data.balance > 0) {
           const payment = {
             paymentMethod: payMode,
             discount: data.discount,
             reservedPrice: data.orderPrice,
           };
+          console.log(payment);
+          priceS = priceS - data.balance
+          patchOrder(order.orderId, payment)
+            .then((res) => console.log(res))
+            .catch((error) => {
+              console.log(error);
+            });
+        } else if (data.balance >= priceS && priceS > 0 && data.balance > 0) {
+          const payment = {
+            paymentMethod: payMode,
+            discount: data.discount,
+            reservedPrice: priceS,
+          };
+          console.log(payment);
+          priceS = 0;
           patchOrder(order.orderId, payment)
             .then((res) => console.log(res))
             .catch((error) => {
               console.log(error);
             });
         }
-      } else if (pay !== 0) {
-        const payment = {
-          paymentMethod: payMode,
-          discount: data.discount,
-          reservedPrice: reservedPrice + data.reservedPrice,
-        };
-        setReservedPrice(0);
-        patchOrder(order.orderId, payment)
-          .then((res) => {
-            setReservedPrice(0);
-            console.log(res);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+
       }
+
       getLedugerDetails();
       setReservedPrice(0);
       setPayosb(false);
@@ -161,11 +168,10 @@ function CustomerLedgerDetails() {
             {!payosb && (
               <div className="w-full h-20 flex justify-center font-semibold items-center">
                 <button
-                  className={` ${
-                    Number(ledger?.ledger.OSB) !== 0
-                      ? "confirm"
-                      : "confirm_dissable"
-                  }`}
+                  className={` ${Number(ledger?.ledger.OSB) !== 0
+                    ? "confirm"
+                    : "confirm_dissable"
+                    }`}
                   disabled={Number(ledger?.ledger.OSB) === 0}
                   onClick={() => setPayosb(true)}
                 >
@@ -213,9 +219,8 @@ function CustomerLedgerDetails() {
                   </div>
                   <div className="w-full justify-center flex">
                     <button
-                      className={` font-semibold ${
-                        reservedPrice ? "confirm" : "confirm_dissable"
-                      }`}
+                      className={` font-semibold ${reservedPrice ? "confirm" : "confirm_dissable"
+                        }`}
                       onClick={payments}
                       disabled={!reservedPrice}
                     >
@@ -236,11 +241,10 @@ function CustomerLedgerDetails() {
               <p>Out Standing Balance:</p>
               <h1>{Number(ledger?.ledger.OSB).toFixed(2)}</h1>
               <button
-                className={` text-sm px-4 mb-1 rounded-full ${
-                  Number(ledger?.ledger.OSB) !== 0
-                    ? "bg-blue-500 text-white"
-                    : "bg-blue-300 text-white"
-                }`}
+                className={` text-sm px-4 mb-1 rounded-full ${Number(ledger?.ledger.OSB) !== 0
+                  ? "bg-blue-500 text-white"
+                  : "bg-blue-300 text-white"
+                  }`}
                 disabled={Number(ledger?.ledger.OSB) === 0}
                 onClick={popuptrue}
               >
@@ -277,9 +281,8 @@ function CustomerLedgerDetails() {
                 <dl
                   onClick={() => clickdata(index)}
                   key={index}
-                  className={`flex h-auto w-full p-1 px-2 border-b-2 ${
-                    index % 2 === 0 ? "bg-gray-100" : "bg-white"
-                  }`}
+                  className={`flex h-auto w-full p-1 px-2 border-b-2 ${index % 2 === 0 ? "bg-gray-100" : "bg-white"
+                    }`}
                 >
                   <dt className="w-14 h-full flex justify-center overflow-hidden ">
                     {index + 1}
@@ -294,7 +297,8 @@ function CustomerLedgerDetails() {
                     {item.orderPrice}
                   </dt>
                   <dt className="flex-1 h-full flex justify-end overflow-hidden">
-                    {item.orderPayment.reservedPrice + item.orderPayment.discount}
+                    {item.orderPayment.reservedPrice +
+                      item.orderPayment.discount}
                   </dt>
                   <dt className="flex-1 h-full flex justify-end overflow-hidden">
                     {item.perOrderBalance.toFixed(2)}
@@ -367,9 +371,8 @@ function CustomerLedgerDetails() {
                 </div>
                 <div className="w-full justify-center flex">
                   <button
-                    className={` font-semibold ${
-                      reservedPrice ? "confirm" : "confirm_dissable"
-                    }`}
+                    className={` font-semibold ${reservedPrice ? "confirm" : "confirm_dissable"
+                      }`}
                     onClick={payments}
                     disabled={!reservedPrice}
                   >

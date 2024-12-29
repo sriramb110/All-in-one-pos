@@ -15,11 +15,11 @@ import Profile from '../common_component/Profile';
 function ShopNavigator() {
   return (
     <SearchProvider>
-      <div className="flex overflow-hidden h-screen w-screen">
+      <div className="flex overflow-hidden h-screen w-screen pb-1">
         <Menu />
         <div className=" overflow-hidden">
           <Headers />
-          <div className="overflow-hidden w-full h-full pb-9">
+          <div className="overflow-hidden w-full h-full pb-5 p-0.5">
             <Routes>
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/home/*" element={<Navigate to="/home" replace />} />
