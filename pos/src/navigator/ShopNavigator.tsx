@@ -6,11 +6,11 @@ import Home from '../shop/home/Home';
 import SettingNavigate from '../shop/setting/SettingNavigate';
 import { SearchProvider } from '../common_component/menu/SearchContext';
 import OverallOrders from '../shop/Orders/OverallOrders';
-import ThermalPrinterTest from './ThermalPrinterTest';
 import Orders from '../shop/Orders/Orders';
 import CustomerLedger from '../shop/Wallet/CustomerLedger';
 import CustomerLedgerDetails from '../shop/Wallet/CustomerLedgerDetails';
 import Profile from '../common_component/Profile';
+import StockManagement from '../shop/stock management/StockManagement';
 
 function ShopNavigator() {
   return (
@@ -30,7 +30,7 @@ function ShopNavigator() {
               <Route path="/wallet" element={<CustomerLedger />} />
               <Route path="/wallet/:id" element={<CustomerLedgerDetails />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/data" element={<ThermalPrinterTest />} />
+              <Route path="/stockManagement" element={<StockManagement />} />
             </Routes>
           </div>
         </div>

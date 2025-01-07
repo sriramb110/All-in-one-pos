@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Customer, ProductSelected } from "../../Interface";
-import { postLedger, postOrders } from "../../../common_component/services";
+import { osbLedger, postLedger, postOrders } from "../../../common_component/services";
+import ThermalPrinterTest from "../../../navigator/ThermalPrinterTest";
 
 type Props = {
   Customerdata: Customer | any;
@@ -22,8 +23,14 @@ function Completed({
   const [responceSuccess, setResponceSuccess] = useState<boolean>(false);
   const [orderId, setOrderId] = useState<string>("");
   const [date, setDate] = useState<string>("");
+  const [osb, setOsb] = useState<any>();
 
   useEffect(() => {
+    osbLedger(Customerdata.phoneNumber).then((res) => {
+      setOsb(res.data.ledger);
+    }).catch((error) => {
+      setOsb("0");
+    });
     postorder();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -84,13 +91,14 @@ function Completed({
                 <p>{totalAmount}</p>
               </li>
             </ul>
-            <div>
+            <div className="flex w-full justify-around my-2">
               <button
                 className="w-full flex justify-center confirm"
                 onClick={() => goToHome()}
               >
                 Make New Order
               </button>
+              <ThermalPrinterTest Customerdata={Customerdata} orderList={orderList} payment={payment} totalAmount={totalAmount} orderId={orderId} osb={osb}/>
             </div>
           </div>
         ) : (

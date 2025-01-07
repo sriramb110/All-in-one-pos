@@ -46,7 +46,7 @@ const Icons = ({ IconComponent }: { IconComponent: React.ElementType }) => {
 
 const iconMap = {
   home: () => <Menubar IconComponent={HomeRoundedIcon} />,
-  cart: () => <Menubar IconComponent={ShoppingCartRoundedIcon} />,
+  Inventory: () => <Menubar IconComponent={Inventory2Icon} />,
   products: () => <Menubar IconComponent={LocalMallRoundedIcon} />,
   settings: () => <Menubar IconComponent={SettingsRoundedIcon} />,
   logout: () => <Menubar IconComponent={LogoutRoundedIcon} />,

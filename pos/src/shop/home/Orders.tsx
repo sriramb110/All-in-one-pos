@@ -9,7 +9,6 @@ type OrdersProps = {
 
 function Orders({ products, selectproduct }: OrdersProps) {
   const productNull = () => {
-    // Return a "No Product" link when products array is empty
     if (products.length === 0) {
       return (
         <Link

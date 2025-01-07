@@ -68,6 +68,7 @@ export const postProduct = async (input: any) => {
       categoryType: input.categoryName,
       productName: input.productName,
       amount: input.amount,
+      stock:0
     });
     return response;
   } catch (error) {
@@ -128,6 +129,7 @@ export const editProduct = async (input: any, id: string) => {
       categoryType: input.categoryName,
       productName: input.productName,
       amount: Number(input.amount),
+      stock:0
     });
     return response;
   } catch (error) {

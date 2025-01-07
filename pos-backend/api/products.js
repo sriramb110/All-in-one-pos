@@ -7,7 +7,8 @@ const ProductSchema = new mongoose.Schema({
     productName: { type: String, required: true },
     categoryType: { type: String, required: true },
     businessName: { type: String, required: true },
-    amount: { type: Number, required: true }
+    amount: { type: Number, required: true },
+    stock:{type: Number, required: true},
 });
 
 ProductSchema.index({ productName: 1, categoryType: 1, businessName: 1, amount:1 }, { unique: true });
@@ -31,7 +32,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 router.post('/', authenticateToken, async (req, res) => {
-    const { productName, categoryType, amount } = req.body;
+    const { productName, categoryType, amount,stock } = req.body;
     const businessName = req.user.business; 
 
     if (!productName || !categoryType || !businessName) {
@@ -39,11 +40,11 @@ router.post('/', authenticateToken, async (req, res) => {
     }
 
     try {
-        const existProduct = await Product.findOne ({productName, categoryType, businessName, amount});
+        const existProduct = await Product.findOne ({productName, categoryType, businessName, amount,stock});
         if(existProduct){
             return res.status(400).json({ error: 'Prosuct name already exists for this business.' });
         }
-        const product = new Product({ productName, categoryType, businessName, amount });
+        const product = new Product({ productName, categoryType, businessName, amount,stock });
         await product.save();
         res.status(201).json({ message: 'Product added successfully.', product });
     } catch (error) {
@@ -87,7 +88,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 
 // Route to update a product by ID (PUT - full update)
 router.put('/:id', authenticateToken, async (req, res) => {
-    const { productName, categoryType, amount } = req.body;
+    const { productName, categoryType, amount,stock } = req.body;
     const businessName = req.user.business;
 
     if (!productName || !categoryType) {
@@ -97,7 +98,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(
             req.params.id,
-            { productName, categoryType, businessName, amount }, 
+            { productName, categoryType, businessName, amount,stock }, 
             { new: true, runValidators: true }
         );
 

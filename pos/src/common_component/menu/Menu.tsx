@@ -13,7 +13,7 @@ function Menu() {
         setVisible(false);
       }
     };
-    handleResize(); // Set initial state based on current window size
+    handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -62,10 +62,10 @@ function Menu() {
         >
           <div className="flex flex-col w-full justify-evenly items-center h-full menu-icons">
             {icons(iconMap["home"], "/home", "HOME")}
-            {icons(iconMap["cart"], "", "Cart")}
             {icons(iconMap["products"], "/orders", "Orders")}
             {icons(iconMap["wallet"], "/wallet", "Wallet")}
             {icons(iconMap["settings"], "/setting/products", "Setting")}
+            {icons(iconMap["Inventory"], "/stockManagement", "Stock")}
             {icons(iconMap["logout"], "Logout", "Logout")}
           </div>
           <div
@@ -73,11 +73,11 @@ function Menu() {
               visible ? "" : "max-menu"
             }`}
           >
-            {iconSmall(iconMap["home"], "")}
-            {iconSmall(iconMap["cart"], "")}
+            {iconSmall(iconMap["home"], "/home")}
             {iconSmall(iconMap["products"], "/orders")}
             {iconSmall(iconMap["wallet"], "/wallet")}
             {iconSmall(iconMap["settings"], "/setting/products")}
+            {iconSmall(iconMap["Inventory"], "/stockManagement")}
             {iconSmall(iconMap["logout"], "Logout")}
           </div>
         </div>

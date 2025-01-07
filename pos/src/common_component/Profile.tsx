@@ -31,9 +31,9 @@ const Profile: React.FC = () => {
     const handleScrollToProfileTheme = () => scrollToElement(secondContainerRef);
 
     return (
-        <div className="w-full h-full overflow-auto flex">
+        <div className="w-full h-full overflow-auto flex bg-gradient-to-r from-gray-50 to-blue-100">
             <div
-                className="fixed flex flex-col justify-start items-center bg-blue-200 text-white rounded-e-3xl"
+                className="fixed flex flex-col justify-start items-center bg-blue-100 text-white rounded-e-3xl"
                 style={{ height: "93%", width: "12%" }}
             >
                 <img src={downloadImage} alt="Profile" className="w-fit h-fit mt-4 rounded-full border-4 border-white shadow-lg" />
@@ -57,7 +57,7 @@ const Profile: React.FC = () => {
                 </button>
             </div>
             <div ref={containerRef} className="flex flex-col w-full h-fit items-center overflow-hidden">
-                <div className="h-screen w-full flex items-center justify-start bg-gradient-to-r from-blue-100 to-blue-200">
+                <div className="h-screen w-full flex items-center justify-start ">
                     <div style={{ width: "11%" }}></div>
                     <div className="w-full h-full pl-2">
                         <MyProfileComponent />
@@ -65,14 +65,14 @@ const Profile: React.FC = () => {
                 </div>
                 <div
                     ref={firstContainerRef}
-                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r  from-blue-100 to-blue-200"
+                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r "
                 >
                     <div style={{ width: "11%" }}></div>
                     <div className="w-full h-full pl-2"><WorkProfileComponent /></div>
                 </div>
                 <div
                     ref={secondContainerRef}
-                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r  from-blue-100 to-blue-200"
+                    className="h-screen w-full flex items-center justify-start bg-gradient-to-r "
                 >
                     <div style={{ width: "11%" }}></div>
                     <div className="w-full h-full pl-2"><ProfileThemeComponent /></div>
