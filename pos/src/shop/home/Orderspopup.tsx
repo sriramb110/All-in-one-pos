@@ -215,7 +215,7 @@ function Orderspopup({
                 <p>{paymentMode.discount}</p>
               </div>
               <div className="flex border-b-2 w-full justify-between sidebar">
-                <p>Resved Price</p>
+                <p>Reserved Price</p>
                 <p>{paymentMode.reservedPrice}</p>
               </div>
               <div className="flex  w-full justify-between sidebar">

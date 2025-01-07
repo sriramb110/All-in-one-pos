@@ -25,11 +25,12 @@ const ThermalPrinterTest: React.FC<ThermalPrinterTestProps> = ({
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
       <thead>
         <tr>
-          <th style="border: 1px solid black; padding: 5px; width: 10%;">S.No</th>
+          <th style="border: 1px solid black; padding: 5px; width: 5%;">S.No</th>
           <th style="border: 1px solid black; padding: 5px; width: 30%;">Product Name</th>
           <th style="border: 1px solid black; padding: 5px; width: 10%;">Price(₹)</th>
           <th style="border: 1px solid black; padding: 5px; width: 10%;">Qty</th>
           <th style="border: 1px solid black; padding: 5px; width: 20%;">Total(₹)</th>
+          <th style="padding: 6px; width: 2%;"> </th>
         </tr>
       </thead>
       <tbody>
@@ -37,11 +38,12 @@ const ThermalPrinterTest: React.FC<ThermalPrinterTestProps> = ({
         .map(
           (item, index) => `
               <tr>
-                <td style="border: 1px solid black; padding: 5px;">${index + 1}</td>
-                <td style="border: 1px solid black; padding: 5px;">${item.ProductName} </br> (${item.CategoryType})</td>
-                <td style="border: 1px solid black; padding: 5px;">${Number(item.Amount).toFixed(2)}</td>
-                <td style="border: 1px solid black; padding: 5px;">${item.orderQty}</td>
+                <td style="border: 1px solid black; padding: 5px; text-align: right">${index + 1}</td>
+                <td style="border: 1px solid black; padding: 5px;">${item.ProductName} (${item.CategoryType})</td>
+                <td style="border: 1px solid black; padding: 5px; text-align: right">${Number(item.Amount).toFixed(2)}</td>
+                <td style="border: 1px solid black; padding: 5px; text-align: right">${item.orderQty}</td>
                 <td style="border: 1px solid black; padding: 5px; text-align: right">${(Number(item.Amount) * item.orderQty).toFixed(2)}</td>
+                <td style="padding: 6px; text-align: right"></td>
               </tr>
             `
         )
@@ -53,26 +55,26 @@ const ThermalPrinterTest: React.FC<ThermalPrinterTestProps> = ({
 
   const customerDetails = () => {
     return `
-    <table style="width: 100%; margin-bottom: 20px;">
+    <table style="width: 100%; margin-bottom: 20px; text-align: top; ">
       <tr>
-        <td style="width: 50%;">
+        <td style="width: 50%; text-align: left;">
           <h3>Customer Details</h3>
-          <p>Name: ${Customerdata.customerName}</p>
-          <p>Phone: ${Customerdata.phoneNumber}</p>
-          <p>Email: ${Customerdata.emailId || 'N/A'}</p>
+          <p>Name:</br> ${Customerdata.customerName}</p>
+          <p>Phone:</br> ${Customerdata.phoneNumber}</p>
+          <p>Email:</br> ${Customerdata.emailId || 'N/A'}</p>
         </td>
-        <td style="width: 50%;  margin: 1px">
+        <td style="width: 50%;  margin: 1px; text-align: right;">
           <h3>Order Details</h3>
-          <p>Order ID: ${orderId}</p>
-          <p>Date: ${new Date().toLocaleDateString()}</p>
-          <p>Paymant Method: <b>${payment?.paymentMethod}</b></p>
+          <p>Order ID:</br> ${orderId}</p>
+          <p>Date:</br> ${new Date().toLocaleDateString()}</p>
+          <p>Paymant Method:</br> <b>${payment?.paymentMethod}</b></p>
         </td>
       </tr>
     </table>
   `;
   };
 
-  const payMent = () => {
+  const payments = () => {
     return `
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
       <tbody style="padding: 5px;">
@@ -128,7 +130,7 @@ const ThermalPrinterTest: React.FC<ThermalPrinterTestProps> = ({
       <h1 style="text-align: center;">${shopName}</h1>
       ${customerDetails()}
       ${generateOrderList()}
-      ${payMent()}
+      ${payments()}
       <p style="text-align: center; margin-top: 20px;">Thank you for your purchase!</p>
     </div>
   `;
