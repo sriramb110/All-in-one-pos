@@ -52,6 +52,8 @@ function Headers() {
             return "POS Orders";
           case "/wallet":
             return "POS Wallet";
+          case "/stockManagement":
+            return "Stock Management";
           default:
             return "POS";
         }

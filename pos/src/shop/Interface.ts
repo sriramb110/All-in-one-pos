@@ -3,10 +3,12 @@ export interface CategoryInterface {
     _id: string
 }
 export interface ProductInterface {
+    buyprice: number
+    inward: number
     categoryType: string
     amount: number
     productName: string
-  stock:string
+    stock:string
     _id: string
 }
 export interface Customer {
