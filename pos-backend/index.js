@@ -10,6 +10,7 @@ const products = require('./api/products');
 const customer = require('./api/customer')
 const orders = require("./api/orders");
 const ledger = require("./api/Ledger")
+const stockRouter = require("./api/stockManagement")
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use('/api/products', products);
 app.use('/api/customer', customer);
 app.use("/api/order", orders);
 app.use("/api/ledger", ledger);
+app.use("/api/stockManagement", stockRouter);
 
 // Email Endpoint
 app.post('/send-email', (req, res) => {

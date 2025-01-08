@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 
 // Define the Product schema
 const ProductSchema = new mongoose.Schema({
-    productName: { type: String, required: true },
-    categoryType: { type: String, required: true },
-    businessName: { type: String, required: true },
-    amount: { type: Number, required: true },
-    stock:{type: Number, required: true},
+  productName: { type: String, required: true },
+  categoryType: { type: String, required: true },
+  businessName: { type: String, required: true },
+  amount: { type: Number, required: true },
+  stock: { type: Number, default: 0 },
 });
 
 ProductSchema.index({ productName: 1, categoryType: 1, businessName: 1, amount:1 }, { unique: true });

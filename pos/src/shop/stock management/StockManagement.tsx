@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { category, product } from "../../common_component/services";
+import { category, postStack, product } from "../../common_component/services";
 import { CategoryInterface, ProductInterface } from "../Interface";
 import Loading from "../../common_component/Loading";
 import { GridColDef } from "@mui/x-data-grid";
@@ -13,7 +13,7 @@ function StockManagement() {
   const [isLoading, setIsLoading] = useState(false);
   const { searchTerm } = useSearch();
   const [categorys, setCategorys] = useState<CategoryInterface[]>([]);
-  const [agency,setAgency]=useState<string>()
+  const [agency, setAgency] = useState<string>();
 
   useEffect(() => {
     getProduct();
@@ -154,7 +154,6 @@ function StockManagement() {
     setFilterProduct(updatedProducts);
   };
 
-  
   const handleSelectedData = (selectedRows: any[]) => {
     console.log("Selected Rows:", selectedRows);
   };
@@ -214,15 +213,18 @@ function StockManagement() {
     return total + (product.inward || 0);
   }, 0);
 
-  const updateStock = ()=>{
+  const updateStock = () => {
     const Stock = {
       AgencyName: agency,
-      StockInward: filterProduct.filter((i) => i.inward > 0),
-      Date: new Date().toLocaleDateString()
-    }
-    console.log(Stock)
-
-  }
+      StockInward: filterProduct
+        .filter((i) => i.inward > 0)
+        .map((i) => ({ id: i._id, buyprice: i.buyprice, inward: i.inward })),
+      Date: new Date().toLocaleDateString(),
+    };
+    postStack(Stock)
+      .then((res) => console.log(res))
+      .catch((error) => console.error(error));
+  };
 
   return (
     <div className="w-full h-full bg-gray-100 pb-8 flex">
@@ -238,7 +240,9 @@ function StockManagement() {
       <div className="w-2/6 h-full p-3 m-1 bg-white rounded-lg shadow-xl pb-5">
         <div className="w-full h-full border border-black rounded-lg flex flex-col p-1">
           <div className="h-20 w-full justify-center flex items-center">
-            <button className="confirm" onClick={updateStock}>Update Inwards</button>
+            <button className="confirm" onClick={updateStock}>
+              Update Stock
+            </button>
           </div>
           <div className="flex gap-1">
             <TextField

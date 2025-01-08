@@ -26,15 +26,20 @@ function Orders({ products, selectproduct }: OrdersProps) {
       <div className="bg-white h-auto p-5 flex flex-wrap gap-4 overflow-auto justify-start">
         {products.length > 0
           ? products.map((product) => (
-              <div
-                key={product._id}
-                onClick={() => selectproduct(product._id)}
-              className="px-2 py-3 w-28 h-28 flex flex-col justify-between items-center border-2 border-gray-600 rounded-md bg-indigo-500 text-white text-sm shadow-md cursor-pointer hover:bg-indigo-600  hover:text-cyan-50 responsive-container"
-              >
-                <p className="font-semibold">{product.productName}</p>
-                <p className="text-sm">Price: {product.amount}</p>
-              </div>
-            ))
+            <button
+              disabled={Number(product.stock) === 0}
+              key={product._id}
+              onClick={() => selectproduct(product._id)}
+              className={`px-2 py-3 w-28 h-28 flex flex-col justify-between items-center border-2 border-gray-600 rounded-md text-white text-sm shadow-md cursor-pointer ${Number(product.stock) === 0
+                  ? "bg-red-500 cursor-not-allowed" 
+                  : "bg-indigo-500 hover:bg-indigo-600 hover:text-cyan-50"
+                } responsive-container`}
+            >
+              <p className="font-semibold">{product.productName}</p>
+              {Number(product.stock) === 0 && <p>Stock null</p>}
+              {Number(product.stock) !== 0 &&<p className="text-sm">Price: {product.amount}</p>}
+            </button>
+          ))
           : productNull()}
       </div>
     </div>
