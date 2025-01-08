@@ -6,6 +6,7 @@ export interface ProductInterface {
     categoryType: string
     amount: number
     productName: string
+  stock:string
     _id: string
 }
 export interface Customer {

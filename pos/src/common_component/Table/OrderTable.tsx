@@ -12,7 +12,7 @@ interface Props {
 function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 30,
+    pageSize: 15,
   });
 
   const handleSelectionChange = (selectionModel: GridRowSelectionModel) => {
@@ -24,7 +24,7 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
     <Paper
       sx={{
         height: "100%",
-        width: "100%", 
+        width: "100%",
         minHeight: 400,
         padding: 2,
       }}
@@ -35,8 +35,7 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
         getRowId={(row) => row.id}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[30, 50]}
-        // checkboxSelection
+        pageSizeOptions={[15, 30, 50]}
         disableRowSelectionOnClick
         onRowSelectionModelChange={(newSelection) =>
           handleSelectionChange(newSelection)
@@ -48,7 +47,7 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
         }}
         sx={{
           border: 1,
-          width: "100%", 
+          width: "100%",
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: "#f5f5f5",
           },
@@ -57,5 +56,6 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
     </Paper>
   );
 }
+
 
 export default OrderTable;

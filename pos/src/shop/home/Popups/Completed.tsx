@@ -37,7 +37,7 @@ function Completed({
 
   const postorder = () => {
     const now = new Date();
-    const dateorder = `${now.toLocaleDateString()} | ${now.toLocaleTimeString()}`;
+    const dateorder = `${now.toLocaleDateString()} / ${now.toLocaleTimeString()}`;
     const OrdersId = `${now.getTime()}`;
     setDate(dateorder);
     setOrderId(OrdersId);
