@@ -15,13 +15,13 @@ function PaymentMode({
 }: PaymentModeProps) {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [discount, setDiscount] = useState<number>(0);
-  const [reservedPrice, setReservedPrice] = useState<number>(0);
+  const [receivedPrice, setReceivedPrice] = useState<number>(0);
 
   useEffect(() => {
     if (oldpaymentMode) {
       setPaymentMethod(oldpaymentMode.paymentMethod);
       setDiscount(oldpaymentMode.discount);
-      setReservedPrice(oldpaymentMode.reservedPrice);
+      setReceivedPrice(oldpaymentMode.receivedPrice);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -33,11 +33,11 @@ function PaymentMode({
     }
   };
 
-  const reservedValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const receivedValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputNumber = Number(e.target.value);
 
     if (!isNaN(inputNumber) && inputNumber <= totalAmount - discount) {
-      setReservedPrice(inputNumber);
+      setReceivedPrice(inputNumber);
     }
   };
 
@@ -46,23 +46,23 @@ function PaymentMode({
       const payment = {
         paymentMethod,
         discount,
-        reservedPrice: reservedPrice,
-        osb: totalAmount + Number(OSB) - discount - reservedPrice,
+        receivedPrice: receivedPrice,
+        osb: totalAmount + Number(OSB) - discount - receivedPrice,
       };
       paymentDetails(payment);
     } else if (paymentMethod === "Card") {
       const payment = {
         paymentMethod,
         discount,
-        reservedPrice: reservedPrice,
-        osb: totalAmount + Number(OSB) - discount - reservedPrice,
+        receivedPrice: receivedPrice,
+        osb: totalAmount + Number(OSB) - discount - receivedPrice,
       };
       paymentDetails(payment);
     } else if (paymentMethod === "Pay Later") {
       const payment = {
         paymentMethod,
         discount,
-        reservedPrice: 0,
+        receivedPrice: 0,
         osb: totalAmount + Number(OSB) - discount,
       };
       paymentDetails(payment);
@@ -81,7 +81,7 @@ function PaymentMode({
               onChange={() => {
                 setPaymentMethod("Pay Later");
                 setDiscount(0);
-                setReservedPrice(0);
+                setReceivedPrice(0);
               }}
             />
             <p className="mx-2">Later</p>
@@ -95,7 +95,7 @@ function PaymentMode({
               onChange={() => {
                 setPaymentMethod("Card");
                 setDiscount(0);
-                setReservedPrice(0);
+                setReceivedPrice(0);
               }}
             />
             <p className="mx-2">Card</p>
@@ -109,7 +109,7 @@ function PaymentMode({
               onChange={() => {
                 setPaymentMethod("Cash");
                 setDiscount(0);
-                setReservedPrice(0);
+                setReceivedPrice(0);
               }}
             />
             <p className="mx-2">Cash</p>
@@ -137,17 +137,17 @@ function PaymentMode({
                 />
               </li>
               <li className="flex justify-between mt-2">
-                <p>Reserved Price</p>
+                <p>Received Price</p>
                 <input
                   type="string"
                   className="border p-1 w-20 text-end"
-                  value={reservedPrice}
-                  onChange={reservedValue}
+                  value={receivedPrice}
+                  onChange={receivedValue}
                 />
               </li>
               <li className="flex justify-between mt-2">
                 <p>Remaining Price</p>
-                <p>{(totalAmount - discount - reservedPrice).toFixed(2)} </p>
+                <p>{(totalAmount - discount - receivedPrice).toFixed(2)} </p>
               </li>
             </ul>
             <div className="w-full mt-5 h-15 flex justify-center">
@@ -155,14 +155,14 @@ function PaymentMode({
                 className="cancel"
                 onClick={() => {
                   setDiscount(0);
-                  setReservedPrice(0);
+                  setReceivedPrice(0);
                 }}
               >
                 Clear
               </button>
               <button
-                className={` ${reservedPrice ? "confirm" : "confirm_dissable"}`}
-                disabled={!reservedPrice}
+                className={` ${receivedPrice ? "confirm" : "confirm_dissable"}`}
+                disabled={!receivedPrice}
                 onClick={paymentFineshed}
               >
                 Next
@@ -201,7 +201,7 @@ function PaymentMode({
                 className="cancel"
                 onClick={() => {
                   setDiscount(0);
-                  setReservedPrice(0);
+                  setReceivedPrice(0);
                 }}
               >
                 Clear
@@ -243,7 +243,7 @@ function PaymentMode({
                 className="cancel"
                 onClick={() => {
                   setDiscount(0);
-                  setReservedPrice(0);
+                  setReceivedPrice(0);
                 }}
               >
                 Clear

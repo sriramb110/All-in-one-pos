@@ -40,7 +40,7 @@ export interface Order {
 export interface Payment {
   paymentMethod: string;
   discount: number;
-  reservedPrice: number;
+  receivedPrice: number;
 }
 
 export interface OrderItem {

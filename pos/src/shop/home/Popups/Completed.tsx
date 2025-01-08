@@ -45,7 +45,7 @@ function Completed({
     const Payment = {
       paymentMethod: payment.paymentMethod,
       discount: payment.discount,
-      reservedPrice: payment.reservedPrice,
+      receivedPrice: payment.receivedPrice,
     };
 
     postOrders(

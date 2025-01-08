@@ -11,7 +11,7 @@ import Loading from "../../common_component/Loading";
 function CustomerLedgerDetails() {
   const { id } = useParams<{ id: string }>();
   const [ledger, setLedger] = useState<LedgerResponse>();
-  const [reservedPrice, setReservedPrice] = useState<number>(0);
+  const [receivedPrice, setReceivedPrice] = useState<number>(0);
   const [payMode, setPaymode] = useState<string>("");
   const [payosb, setPayosb] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ function CustomerLedgerDetails() {
     return ledger?.orderDetails.map((item, index) => {
       const perOrderBalance =
         item.orderPrice -
-        (item.orderPayment.reservedPrice + item.orderPayment.discount);
+        (item.orderPayment.receivedPrice + item.orderPayment.discount);
       runningBalance += perOrderBalance;
       return { ...item, perOrderBalance, runningBalance };
     });
@@ -53,13 +53,13 @@ function CustomerLedgerDetails() {
     const inputNumber = Number(e.target.value);
 
     if (!isNaN(inputNumber) && inputNumber <= Number(ledger?.ledger.OSB)) {
-      setReservedPrice(inputNumber);
+      setReceivedPrice(inputNumber);
     }
   };
 
   const payments = () => {
     setLoading(true);
-    const price = Number(ledger?.ledger.OSB) - reservedPrice;
+    const price = Number(ledger?.ledger.OSB) - receivedPrice;
     console.log(price)
     patchledger(id, price)
       .then((res) => {console.log(res); setPopup(!true);})
@@ -68,25 +68,25 @@ function CustomerLedgerDetails() {
         setPopup(!true);
       });
 
-    let priceS = reservedPrice;
+    let priceS = receivedPrice;
 
     ledger?.orderDetails.map((order) => {
       const data = {
         orderPrice: order.orderPrice,
-        reservedPrice: order.orderPayment?.reservedPrice,
-        balance: order.orderPrice - order.orderPayment?.reservedPrice,
+        receivedPrice: order.orderPayment?.receivedPrice,
+        balance: order.orderPrice - order.orderPayment?.receivedPrice,
         discount: order.orderPayment.discount,
       };
       let pay = -data.balance + priceS;
       console.log(data.balance)
-      setReservedPrice(pay);
+      setReceivedPrice(pay);
       console.log(priceS);
       if (priceS >= 0) {
         if (data.balance <= priceS && data.balance > 0) {
           const payment = {
             paymentMethod: payMode,
             discount: data.discount,
-            reservedPrice: data.orderPrice,
+            receivedPrice: data.orderPrice,
           };
           console.log(payment);
           priceS = priceS - data.balance
@@ -99,7 +99,7 @@ function CustomerLedgerDetails() {
           const payment = {
             paymentMethod: payMode,
             discount: data.discount,
-            reservedPrice: data.reservedPrice+priceS,
+            receivedPrice: data.receivedPrice+priceS,
           };
           console.log(payment);
           priceS = 0;
@@ -113,7 +113,7 @@ function CustomerLedgerDetails() {
       }
 
       getLedugerDetails();
-      setReservedPrice(0);
+      setReceivedPrice(0);
       setPayosb(false);
       setLoading(false);
     });
@@ -209,20 +209,20 @@ function CustomerLedgerDetails() {
                       name="amount"
                       placeholder="Pay Amount"
                       onChange={paying}
-                      value={reservedPrice}
+                      value={receivedPrice}
                       className="text-end border-2 rounded-lg px-2 w-24"
                     />
                   </div>
                   <div className=" w-full flex justify-between ">
                     <p>Balance Price</p>
-                    <p>{Number(ledger?.ledger.OSB) - reservedPrice}</p>
+                    <p>{Number(ledger?.ledger.OSB) - receivedPrice}</p>
                   </div>
                   <div className="w-full justify-center flex">
                     <button
-                      className={` font-semibold ${reservedPrice ? "confirm" : "confirm_dissable"
+                      className={` font-semibold ${receivedPrice ? "confirm" : "confirm_dissable"
                         }`}
                       onClick={payments}
-                      disabled={!reservedPrice}
+                      disabled={!receivedPrice}
                     >
                       Confirm to pay
                     </button>
@@ -297,7 +297,7 @@ function CustomerLedgerDetails() {
                     {item.orderPrice}
                   </dt>
                   <dt className="flex-1 h-full flex justify-end overflow-hidden">
-                    {item.orderPayment.reservedPrice +
+                    {item.orderPayment.receivedPrice +
                       item.orderPayment.discount}
                   </dt>
                   <dt className="flex-1 h-full flex justify-end overflow-hidden">
@@ -327,7 +327,7 @@ function CustomerLedgerDetails() {
                 onClick={() => {
                   setPopup(!true);
                   setPaymode("");
-                  setReservedPrice(0);
+                  setReceivedPrice(0);
                 }}
               >
                 X
@@ -361,20 +361,20 @@ function CustomerLedgerDetails() {
                     name="amount"
                     placeholder="Pay Amount"
                     onChange={paying}
-                    value={reservedPrice}
+                    value={receivedPrice}
                     className="text-end border-2 rounded-lg px-2 w-24"
                   />
                 </div>
                 <div className=" w-full flex justify-between ">
                   <p>Balance Price</p>
-                  <p>{Number(ledger?.ledger.OSB) - reservedPrice}</p>
+                  <p>{Number(ledger?.ledger.OSB) - receivedPrice}</p>
                 </div>
                 <div className="w-full justify-center flex">
                   <button
-                    className={` font-semibold ${reservedPrice ? "confirm" : "confirm_dissable"
+                    className={` font-semibold ${receivedPrice ? "confirm" : "confirm_dissable"
                       }`}
                     onClick={payments}
-                    disabled={!reservedPrice}
+                    disabled={!receivedPrice}
                   >
                     Confirm to pay
                   </button>

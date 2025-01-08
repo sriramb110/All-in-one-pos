@@ -141,11 +141,11 @@ function Orders() {
             </li>
             <li>
               <p>Payment Amount:</p>
-              <p>{order.payment.reservedPrice}</p>
+              <p>{order.payment.receivedPrice}</p>
             </li>
             <li>
               <p>Balance Amount:</p>
-              <p>{-order.payment.reservedPrice + Number(order.totalPrice)}</p>
+              <p>{-order.payment.receivedPrice + Number(order.totalPrice)}</p>
             </li>
           </ul>
         </div>
