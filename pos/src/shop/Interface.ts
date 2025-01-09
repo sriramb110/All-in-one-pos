@@ -22,7 +22,8 @@ export interface ProductSelected {
   ProductName: string;
   CategoryType: string;
   Amount: string;
-  orderQty:number
+  orderQty:number;
+  stock:number;
   ids: {
     CategoryId: string;
     ProductId: string;

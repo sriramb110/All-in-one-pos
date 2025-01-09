@@ -36,7 +36,10 @@ function Calculations({
         setOrderlists((prevList) =>
           prevList.map((item) =>
             item.ids.ProductId === orderProducts.ids.ProductId
-              ? { ...item, orderQty: (item.orderQty || 1) + 1 }
+              ? {
+                ...item,
+                orderQty: Math.min((item.orderQty || 1) + 1, item.stock),
+              }
               : item
           )
         );
@@ -46,8 +49,8 @@ function Calculations({
     if (allProduct) {
       setOrderlists([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderProducts, allProduct]);
+
 
   useEffect(() => {
     listOfProducts(orderlists);

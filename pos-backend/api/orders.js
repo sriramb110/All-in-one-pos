@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const { Product } = require("../models/stockModels");
 
 const OrdersDetails = new mongoose.Schema({
   Customerdata: { type: Object, required: true },
@@ -60,10 +61,23 @@ router.post("/", authenticateToken, async (req, res) => {
     });
     const savedOrder = await order.save();
 
-    res.status(201).json({
-      message: "Order created successfully.",
-      order: savedOrder,
-    });
+    for (const item of orderList) {
+      const {orderQty,ids} = item
+
+      if(!ids || orderQty == null) continue;
+
+      const product = await Product.findById(ids.ProductId);
+      if (product) {
+        product.stock -= orderQty;
+        await product.save(); 
+      } else {
+        console.log("Product not found for ID:", ids.ProductId); // Debug log
+      }
+    }
+      res.status(201).json({
+        message: "Order created successfully.",
+        order: savedOrder,
+      });
   } catch (error) {
     console.error(error);
     res

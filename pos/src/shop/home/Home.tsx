@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import Orderspopup from "./Orderspopup";
 import Loading from "../../common_component/Loading";
 import { Autocomplete, TextField } from "@mui/material";
+import { useSearch } from "../../common_component/menu/SearchContext";
 
 function Home() {
   const [products, setProducts] = useState<ProductInterface[]>([]);
@@ -34,11 +35,25 @@ function Home() {
   const [loading, setLoading] = useState(false);
   const [defoltset, setDefoltset] = useState<{ label: string; value: string } | null>({ label: 'All Products', value:'' });
   const [totalOrderAmount,setTotalOrderAmount] = useState<number>(0)
+  const { searchTerm } = useSearch();
 
   useEffect(() => {
     getProduct();
     getCategory();
   }, []);
+  
+  useEffect(() => {
+    if (searchTerm) {
+      setSelectCategory({ name: "Search by" });
+      const PRODUCT = products.filter((i) =>
+        i.productName.toLowerCase().includes(searchTerm.toLowerCase()) 
+      );
+      setFilterProduct(PRODUCT);
+    } else {
+      setSelectCategory({ name: "All Products" });
+      setFilterProduct(products);
+    }
+  }, [searchTerm, products]);
 
   const getProduct = () => {
     setLoading(true);
@@ -114,6 +129,7 @@ function Home() {
       ProductName: selectedProduct.productName,
       CategoryType: categoryType ? categoryType.name : "Unknown",
       Amount: selectedProduct.amount.toString(),
+      stock:Number(selectedProduct.stock),
       orderQty: 1,
       ids: {
         CategoryId: categoryType?._id || "",
@@ -161,6 +177,8 @@ function Home() {
     setConfirmOrder(false);
     clearAll();
     setSelectCus(null);
+    getProduct();
+    getCategory();
   };
 
   const customersData = (data: Customer | null | undefined) => {

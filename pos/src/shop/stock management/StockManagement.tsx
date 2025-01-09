@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { category, postStack, product } from "../../common_component/services";
 import { CategoryInterface, ProductInterface } from "../Interface";
 import Loading from "../../common_component/Loading";
