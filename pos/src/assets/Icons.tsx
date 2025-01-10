@@ -1,6 +1,6 @@
 import React from "react";
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
+import InputIcon from '@mui/icons-material/Input';
 import LocalMallRoundedIcon from '@mui/icons-material/LocalMallRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
@@ -17,6 +17,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import OutputIcon from '@mui/icons-material/Output';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import CallReceivedIcon from '@mui/icons-material/CallReceived';
 
 const Menubar = ({ IconComponent }: { IconComponent: React.ElementType }) => {
   return (
@@ -30,7 +33,7 @@ const Header = ({ IconComponent }: { IconComponent: React.ElementType }) => {
 }
 const Setting = ({ IconComponent }: { IconComponent: React.ElementType }) => {
   return (
-    <IconComponent style={{ color: 'black', fontSize: '40px' }} />
+    <IconComponent style={{ color: 'black', fontSize: '35px' }} />
   );
 }
 const Small = ({ IconComponent }: { IconComponent: React.ElementType }) => {
@@ -65,6 +68,11 @@ const iconMap = {
   Delete:()=><Menubar IconComponent={DeleteIcon}/>,
   Editicon:()=><Icons IconComponent={EditIcon} />,
   Deleteicon:()=><Icons IconComponent={DeleteIcon} />,
+  InputIcon: () => <Setting IconComponent={InputIcon} />,
+  OutputIcon: () => <Setting IconComponent={OutputIcon} />,
+  WarehouseIcon: () => <Setting IconComponent={WarehouseIcon} />,
+  CallReceivedIcon: () => <Setting IconComponent={CallReceivedIcon} />
+
 };
 
 export default iconMap;

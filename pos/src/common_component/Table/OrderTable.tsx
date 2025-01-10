@@ -47,6 +47,7 @@ function OrderTable({ rows, columns, onSelectionChange, onRowClick }: Props) {
         }}
         sx={{
           border: 1,
+          height:'100%',
           width: "100%",
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: "#f5f5f5",

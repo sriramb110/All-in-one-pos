@@ -57,10 +57,10 @@ function StockManagement() {
       serial: index + 1,
       productName: item.productName,
       categoryType: categoryLookup[item.categoryType],
-      stock: item.stock,
+      // stock: item.stock,
       inward: item.inward,
       buyprice: item.buyprice,
-      amount: item.amount,
+      // amount: item.amount,
     }));
 
   const columns: GridColDef[] = [
@@ -74,37 +74,44 @@ function StockManagement() {
     },
     { field: "productName", headerName: "Product Name", flex: 1 },
     { field: "categoryType", headerName: "Category Type", flex: 1 },
-    { field: "stock", headerName: "Quantity", flex: 0.7, type: "number" },
     {
       field: "inward",
       headerName: "Inward",
       flex: 0.7,
-      renderCell: (params) => (
-        <input
-          type="text"
-          min="0"
-          onChange={(e) => handleInward(e, params.id)}
-          defaultValue={params.value || ""}
-          style={{ width: "100%" }}
-        />
-      ),
+      renderCell: (params) => {
+        const product = filterProduct.find((p) => p._id === params.id);
+        return (
+          <input
+            type="text"
+            min="0"
+            placeholder="Enter Qty"
+            onChange={(e) => handleInward(e, params.id)}
+            value={product?.inward || ""}
+            className="w-full border border-black m-1 h-10"
+          />
+        );
+      },
     },
     {
       field: "buyprice",
       headerName: "Buy Price",
       flex: 0.7,
-      renderCell: (params) => (
-        <input
-          type="text"
-          min="0"
-          onChange={(e) => handleBuyPrice(e, params.id)}
-          defaultValue={params.value || ""}
-          style={{ width: "100%" }}
-        />
-      ),
+      renderCell: (params) => {
+        const product = filterProduct.find((p) => p._id === params.id);
+        return (
+          <input
+            type="text"
+            min="0"
+            placeholder="Enter Price"
+            onChange={(e) => handleBuyPrice(e, params.id)}
+            value={product?.buyprice || ""}
+            className="w-full border border-black m-1 h-10"
+          />
+        );
+      },
     },
-    { field: "amount", headerName: "Sale Price", flex: 0.7, type: "number" },
   ];
+
 
   const handleInward = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -221,13 +228,28 @@ function StockManagement() {
         .map((i) => ({ id: i._id, buyprice: i.buyprice, inward: i.inward })),
       Date: new Date().toLocaleDateString(),
     };
+
     postStack(Stock)
-      .then((res) => console.log(res))
+      .then((res) => {
+        // Reset `inward` and `buyprice` for all products
+        const clearedProducts = filterProduct.map((product) => ({
+          ...product,
+          inward: 0,
+          buyprice: 0,
+        }));
+
+        setFilterProduct(clearedProducts);
+        setAgency(''); // Clear agency input
+        getProduct(); // Refresh product list if necessary
+      })
       .catch((error) => console.error(error));
   };
 
+  const btnEnable = agency && filterProduct.some((i) => i.inward > 0);
+
+
   return (
-    <div className="w-full h-full bg-gray-100 pb-8 flex">
+    <div className="w-full h-5/6  mt-5 bg-gray-100 gap-1 flex">
       {isLoading && <Loading />}
       <div className="w-4/6 h-full p-0.5">
         <OrderTable
@@ -237,11 +259,11 @@ function StockManagement() {
           onRowClick={handleRowClick}
         />
       </div>
-      <div className="w-2/6 h-full p-3 m-1 bg-white rounded-lg shadow-xl pb-5">
+      <div className="w-2/6 h-full p-3 bg-white rounded-lg shadow-xl">
         <div className="w-full h-full border border-black rounded-lg flex flex-col p-1">
           <div className="h-20 w-full justify-center flex items-center">
-            <button className="confirm" onClick={updateStock}>
-              Update Stock
+            <button className={`${btnEnable ? 'confirm' : 'confirm_disable'}`} disabled={!btnEnable} onClick={updateStock}>
+              Update Inward Items
             </button>
           </div>
           <div className="flex gap-1">
@@ -249,6 +271,7 @@ function StockManagement() {
               id="outlined-basic"
               label="Agency Name"
               variant="outlined"
+              value={agency}
               onChange={(e) => setAgency(e.target.value)}
             />
             <TextField
