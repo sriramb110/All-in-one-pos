@@ -17,7 +17,7 @@ function ShopNavigator() {
     <SearchProvider>
       <div className="flex overflow-hidden h-screen w-screen pb-1">
         <Menu />
-        <div className=" overflow-hidden">
+        <div className="w-full h-full  overflow-hidden">
           <Headers />
           <div className="overflow-hidden w-full h-full pb-5 p-0.5">
             <Routes>

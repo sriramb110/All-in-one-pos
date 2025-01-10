@@ -37,17 +37,13 @@ router.post("/", authenticateToken, async (req, res) => {
 
       if (!id || inward == null) continue;
 
-      console.log("Attempting to update stock for product ID:", id); 
 
       const product = await Product.findById(id); 
       if (product) {
         product.stock += inward;
-        await product.save(); // Save updated product stock
-        console.log(
-          `Stock updated for product ID: ${id}, new stock: ${product.stock}`
-        ); // Debug log
+        await product.save();
       } else {
-        console.log("Product not found for ID:", id); // Debug log
+        console.log("Product not found for ID:", id);
       }
     }
 

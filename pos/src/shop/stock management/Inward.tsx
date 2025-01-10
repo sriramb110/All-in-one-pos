@@ -7,7 +7,7 @@ import OrderTable from "../../common_component/Table/OrderTable";
 import { useSearch } from "../../common_component/menu/SearchContext";
 import { TextField } from "@mui/material";
 
-function StockManagement() {
+function Inward() {
   const [products, setProducts] = useState<ProductInterface[]>([]);
   const [filterProduct, setFilterProduct] = useState<ProductInterface[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -294,4 +294,4 @@ function StockManagement() {
   );
 }
 
-export default StockManagement;
+export default Inward;

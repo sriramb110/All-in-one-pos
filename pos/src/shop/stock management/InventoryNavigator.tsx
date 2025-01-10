@@ -1,7 +1,8 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom';
 import InventoryMenu from './InventoryMenu'
-import StockManagement from './StockManagement';
+import Inward from './Inward';
+import Stock from './Stock';
 
 function InventoryNavigator() {
   return (
@@ -10,10 +11,10 @@ function InventoryNavigator() {
       <div className="h-full mt-2 p-1">
         <Routes>
           <Route path="/*" element={<Navigate to="/inventory-management/inward" replace />} />
-          <Route path="/inward" element={< StockManagement />} />
-          <Route path="/outward" element={<StockManagement />} />
-          <Route path="/stock" element={<StockManagement />} />
-          <Route path="/internal-expensive" element={<StockManagement />} />
+          <Route path="/inward" element={< Inward />} />
+          <Route path="/outward" element={<Inward />} />
+          <Route path="/stock" element={<Stock />} />
+          <Route path="/internal-expensive" element={<Inward />} />
         </Routes>
       </div>
     </div>

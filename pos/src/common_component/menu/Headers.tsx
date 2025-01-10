@@ -52,8 +52,14 @@ function Headers() {
             return "POS Orders";
           case "/wallet":
             return "POS Wallet";
-          case "/stockManagement":
+          case "/inventory-management/stock":
             return "Stock Management";
+          case "/inventory-management/inward":
+            return "Inward";
+          case "/inventory-management/outward":
+            return "Outward";
+          case "/inventory-management/internal-expensive":
+            return "Internal Expensive"
           default:
             return "POS";
         }
@@ -61,16 +67,16 @@ function Headers() {
 
     return (
         <div className='w-auto h-16 bg-cyan-600 p-4 text-white flex'>
-            <div className='pl-5 flex justify-between w-screen pr-10'>
-                <h1 className='text-3xl ml-2 w-auto'>{headerName()}</h1>
+            <div className='pl-5 flex justify-between w-full pr-10'>
+                <h1 className='text-3xl ml-2 w-2/6'>{headerName()}</h1>
                 <input
-                    className='bg-white w-1/4 rounded-full px-4  text-black header-search'
+                    className='bg-white w-2/6 rounded-full px-4  text-black header-search'
                     id=""
                     value={searchTerm}
                     placeholder='Search'
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <div className='flex'>
+                <div className='flex w-2/6 justify-end'>
                     <IconButton aria-label="" onClick={() => navigator('/profile')}>
                         {icons(iconMap['profile'])}
                     </IconButton>
