@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // Stock Schema for storing stock details
 const StockDetails = new mongoose.Schema({
   AgencyName: { type: String, required: true },
-  Date: { type: Date, required: true },
+  Date: { type: String, required: true },
   StockInward: { type: [Object], required: true },
   businessName: { type: String, required: true },
 });

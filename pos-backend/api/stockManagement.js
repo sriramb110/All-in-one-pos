@@ -4,7 +4,6 @@ const { Product, Stock } = require("../models/stockModels"); // Import models
 
 const router = express.Router();
 
-// JWT Authentication middleware
 const authenticateToken = (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
   if (!token)
@@ -19,7 +18,6 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-// Route for adding stock
 router.post("/", authenticateToken, async (req, res) => {
   try {
     const { StockInward, Date, AgencyName } = req.body;
@@ -47,7 +45,6 @@ router.post("/", authenticateToken, async (req, res) => {
       }
     }
 
-    // Return success response
     res.status(201).json({
       message: "Stock saved successfully.",
       order: saveStock,
@@ -59,5 +56,56 @@ router.post("/", authenticateToken, async (req, res) => {
       .json({ error: "An error occurred while creating the stock." });
   }
 });
+
+router.get("/inward", authenticateToken, async (req, res) => {
+  try {
+    const businessName = req.user.business;
+
+    if (!businessName) {
+      return res.status(400).json({ error: "Missing business name in token." });
+    }
+
+    // Fetch all inward stock records for the given business
+    const stockRecords = await Stock.find({ businessName });
+
+    // Prepare enriched stock data with product names and calculate totals
+    const enrichedStock = await Promise.all(
+      stockRecords.map(async (record) => {
+        const enrichedInward = await Promise.all(
+          record.StockInward.map(async (item) => {
+            const product = await Product.findById(item.id);
+
+            return {
+              ...item,
+              productName: product ? product.productName : "Unknown Product",
+            };
+          })
+        );
+
+        const totalInward = enrichedInward.reduce((sum, item) => sum + item.inward, 0);
+        const totalBuyPrice = enrichedInward.reduce((sum, item) => sum + item.buyprice, 0);
+
+        return {
+          ...record.toObject(),
+          StockInward: enrichedInward,
+          totalInward,
+          totalBuyPrice,
+        };
+      })
+    );
+
+    // Sort records by total inward quantity in descending order
+    const sortedStock = enrichedStock.sort((a, b) => b.totalInward - a.totalInward);
+
+    res.status(200).json(sortedStock);
+  } catch (error) {
+    console.error("Error fetching stock inward records:", error);
+    res.status(500).json({
+      error: "An error occurred while fetching stock inward records.",
+    });
+  }
+});
+
+
 
 module.exports = router;

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { category, postStack, product } from "../../common_component/services";
-import { CategoryInterface, ProductInterface } from "../Interface";
+import {
+  category,
+  postStack,
+  product,
+  stockInward,
+} from "../../common_component/services";
+import { CategoryInterface, ProductInterface, StockRecord } from "../Interface";
 import Loading from "../../common_component/Loading";
 import { GridColDef } from "@mui/x-data-grid";
 import OrderTable from "../../common_component/Table/OrderTable";
@@ -14,9 +19,13 @@ function Inward() {
   const { searchTerm } = useSearch();
   const [categorys, setCategorys] = useState<CategoryInterface[]>([]);
   const [agency, setAgency] = useState<string>();
+  const [showHistory, setShowHistory] = useState(false);
+  const [inward, setInward] = useState<StockRecord[]>([]);
+  const [selected, setSelected] = useState<StockRecord| null>()
 
   useEffect(() => {
     getProduct();
+    getInward();
   }, []);
 
   const getProduct = () => {
@@ -44,6 +53,15 @@ function Inward() {
         setIsLoading(false);
       });
   };
+
+  const getInward = () => {
+    stockInward()
+      .then((res) => {
+        const inwarddata: StockRecord[] = res.data
+        setInward(inwarddata)
+      })
+      .catch((error) => console.error(error));
+  };
   const categoryLookup = categorys.reduce((acc, category) => {
     acc[category._id] = category.name;
     return acc;
@@ -62,6 +80,50 @@ function Inward() {
       buyprice: item.buyprice,
       // amount: item.amount,
     }));
+
+  const inwardFilteredData = inward
+    .filter((item) =>
+      item.AgencyName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .map((item, index) => ({
+      id: item._id,
+      serial: index + 1,
+      Date: item.Date,
+      AgencyName: item.AgencyName,
+      inward: item.totalInward,
+      buyprice: item.totalBuyPrice,
+    }));
+
+  const inwardColumns: GridColDef[] = [
+    {
+      field: "serial",
+      headerName: "S.No",
+      type: "number",
+      flex: 0.3,
+      sortable: false,
+      disableColumnMenu: true,
+    },
+    {
+      field: "Date",
+      headerName: "Date",
+      flex: 1,
+    },
+    {
+      field: "AgencyName",
+      headerName: "Agency Name",
+      flex: 1,
+    },
+    {
+      field: "inward",
+      headerName: "Quantity",
+      flex: 1,
+    },
+    {
+      field: "buyprice",
+      headerName: "Total Buy Price",
+      flex: 1,
+    },
+  ];
 
   const columns: GridColDef[] = [
     {
@@ -111,7 +173,6 @@ function Inward() {
       },
     },
   ];
-
 
   const handleInward = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -167,7 +228,14 @@ function Inward() {
 
   const handleRowClick = (id: string | number) => {
     console.log("Clicked row ID:", id);
+    if (showHistory) {
+      const hisData = inward.filter((i) => i._id === id)
+      setSelected(hisData[0])
+
+    }
   };
+
+
 
   const inwardDetails = () => {
     const PRODUCTS = filterProduct.filter((i) => i.inward && i.inward > 0);
@@ -221,17 +289,22 @@ function Inward() {
   }, 0);
 
   const updateStock = () => {
+    const indianDate = new Date().toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).split('/').reverse().join('-');
+
     const Stock = {
       AgencyName: agency,
       StockInward: filterProduct
         .filter((i) => i.inward > 0)
         .map((i) => ({ id: i._id, buyprice: i.buyprice, inward: i.inward })),
-      Date: new Date().toLocaleDateString(),
+      Date: indianDate, 
     };
 
     postStack(Stock)
       .then((res) => {
-        // Reset `inward` and `buyprice` for all products
         const clearedProducts = filterProduct.map((product) => ({
           ...product,
           inward: 0,
@@ -239,30 +312,116 @@ function Inward() {
         }));
 
         setFilterProduct(clearedProducts);
-        setAgency(''); // Clear agency input
-        getProduct(); // Refresh product list if necessary
+        setAgency("");
+        getProduct();
+        getInward();
       })
       .catch((error) => console.error(error));
   };
 
+
   const btnEnable = agency && filterProduct.some((i) => i.inward > 0);
 
+  const toggleHistory = () => {
+    setShowHistory((prev) => !prev);
+  };
+
+  const oldData = () => {
+    return (
+      <div className="w-full h-full bg-white flex flex-col">
+        <div>
+          <button className="confirm" onClick={()=>setSelected(null)}>Back to History</button>
+        </div>
+          <div className="flex justify-between  px-5">
+            <h1>Agency Name : {selected?.AgencyName}</h1>
+            <h1>Date : {selected?.Date}</h1>
+          </div>
+          <div className="flex justify-between  px-5">
+            <p>Total Items : {selected?.totalInward}</p>
+            <p>Total Price : {selected?.totalBuyPrice}</p>
+          </div>
+        <div className="w-full h-5/6 flex flex-col overflow-x-auto">
+          <div className="flex p-4 h-full ">
+            <table className="w-full border-collapse border border-gray-400">
+              <thead>
+                <tr className="bg-gray-100 ">
+                  <th className="border border-gray-400 p-2">S.No</th>
+                  <th className="border border-gray-400 p-2">Product Name</th>
+                  <th className="border border-gray-400 p-2">Inward Quantity</th>
+                  <th className="border border-gray-400 p-2">Buy Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selected?.StockInward.map((product, index) => (
+                  <tr key={product.id}>
+                    <td className="border border-gray-400 p-2 text-center">
+                      {index + 1}
+                    </td>
+                    <td className="border border-gray-400 p-2">
+                      {product.productName}
+                    </td>
+                    <td className="border border-gray-400 p-2 text-center">
+                      {product.inward}
+                    </td>
+                    <td className="border border-gray-400 p-2 text-center">
+                      {product.buyprice}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+    )
+
+  }
 
   return (
-    <div className="w-full h-5/6  mt-5 bg-gray-100 gap-1 flex">
+    <div className="w-full h-full mt-5 bg-gray-100 gap-1 flex">
       {isLoading && <Loading />}
-      <div className="w-4/6 h-full p-0.5">
-        <OrderTable
-          rows={filteredData}
-          columns={columns}
-          onSelectionChange={handleSelectedData}
-          onRowClick={handleRowClick}
-        />
+      <div className="w-full flex flex-col h-full">
+        <div
+          className={` p-0.5 h-full flex flex-col rounded-lg shadow-xl transition-transform duration-500 ${!showHistory ? "hidden" : "transform translate-y-1"
+            }`}
+        >
+          <h1>History</h1>
+          <div className="h-5/6">
+            {!selected ? <OrderTable
+              rows={inwardFilteredData}
+              columns={inwardColumns}
+              onSelectionChange={handleSelectedData}
+              onRowClick={handleRowClick}
+            /> : oldData()}
+          </div>
+        </div>
+        <div
+          className={`p-0.5 h-full transition-transform duration-75 ${showHistory ? "transform translate-y-11 opacity-50 pointer-events-none" : ""}`}
+        >
+          <div className="h-5/6">
+            <OrderTable
+              rows={filteredData}
+              columns={columns}
+              onSelectionChange={handleSelectedData}
+              onRowClick={handleRowClick}
+            />
+          </div>
+        </div>
       </div>
-      <div className="w-2/6 h-full p-3 bg-white rounded-lg shadow-xl">
+
+      <div className="w-2/6 h-5/6 p-3 bg-white rounded-lg shadow-xl">
         <div className="w-full h-full border border-black rounded-lg flex flex-col p-1">
-          <div className="h-20 w-full justify-center flex items-center">
-            <button className={`${btnEnable ? 'confirm' : 'confirm_disable'}`} disabled={!btnEnable} onClick={updateStock}>
+          <div className="h-20 w-full justify-between px-2 flex items-center">
+            <button className="confirm" onClick={()=>{ toggleHistory(); setSelected(null) }}>
+              {showHistory ? "Back" : "History"}
+            </button>
+            <button
+              className={`${btnEnable ? "confirm" : "confirm_disable"}`}
+              disabled={!btnEnable}
+              onClick={updateStock}
+            >
               Update Inward Items
             </button>
           </div>
@@ -272,6 +431,7 @@ function Inward() {
               label="Agency Name"
               variant="outlined"
               value={agency}
+              disabled={showHistory}
               onChange={(e) => setAgency(e.target.value)}
             />
             <TextField

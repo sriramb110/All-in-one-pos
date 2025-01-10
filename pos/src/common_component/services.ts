@@ -292,3 +292,12 @@ export const postStack = async(postData:any)=>{
     throw error;
   }
 }
+
+export const stockInward = async()=>{
+  try{
+    const response = await api.get(`/stockManagement/inward`)
+    return response
+  }catch (error){
+    throw error
+  }
+}

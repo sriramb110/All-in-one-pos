@@ -81,3 +81,21 @@ export interface OrderDetail {
   orderPrice: number;
   orderId: string;
 }
+
+interface StockInwardItem {
+  id: string;
+  buyprice: number;
+  inward: number;
+  productName: string;
+}
+
+export interface StockRecord {
+  _id: string;
+  AgencyName: string;
+  Date: string;
+  StockInward: StockInwardItem[];
+  businessName: string;
+  __v: number;
+  totalInward: number;
+  totalBuyPrice: number;
+}
