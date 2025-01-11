@@ -17,9 +17,19 @@ const ProductSchema = new mongoose.Schema({
   stock: { type: Number, default: 0 },
 });
 
-// Avoid re-defining the model if it already exists
-const Product =
-  mongoose.models.Product || mongoose.model("Product", ProductSchema);
-const Stock = mongoose.models.Stock || mongoose.model("Stock", StockDetails);
+const OrdersDetails = new mongoose.Schema({
+  Customerdata: { type: Object, required: true },
+  payment: { type: Object, required: true },
+  orderList: { type: [Object], required: true },
+  totalPrice: { type: Number, required: true },
+  orderId: { type: String, required: true },
+  Date_Time: { type: String, required: true },
+  businessName: { type: String, required: true },
+});
 
-module.exports = { Product, Stock };
+// Avoid re-defining the model if it already exists
+const Product =  mongoose.models.Product || mongoose.model("Product", ProductSchema);
+const Stock = mongoose.models.Stock || mongoose.model("Stock", StockDetails);
+const Orders = mongoose.models.Stock || mongoose.model("Orders", OrdersDetails);
+
+module.exports = { Product, Stock, Orders };

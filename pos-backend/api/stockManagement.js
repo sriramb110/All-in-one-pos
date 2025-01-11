@@ -1,6 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const { Product, Stock } = require("../models/stockModels"); // Import models
+const { Product, Stock } = require("../models/stockModels"); 
 
 const router = express.Router();
 
@@ -103,6 +103,20 @@ router.get("/inward", authenticateToken, async (req, res) => {
     res.status(500).json({
       error: "An error occurred while fetching stock inward records.",
     });
+  }
+});
+
+router.get("/outward", authenticateToken, async(req, res)=>{
+  try{
+    const businessName = req.user.business;
+
+    if (!businessName) {
+      return res.status(400).json({ error: "Missing business name in token." });
+    }
+
+    const stockRecords = await Stock.find({ businessName });
+  }catch(error){
+
   }
 });
 
