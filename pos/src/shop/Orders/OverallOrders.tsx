@@ -51,7 +51,7 @@ function OverallOrders() {
       serial: index + 1,
       customerName: order.Customerdata.customerName,
       phoneNumber: order.Customerdata.phoneNumber,
-      orderDate: order.Date_Time,
+      orderDate: order.Date,
       orderId: order.orderId,
       orderAmount: order.totalPrice,
     }));

@@ -23,7 +23,7 @@ const OrdersDetails = new mongoose.Schema({
   orderList: { type: [Object], required: true },
   totalPrice: { type: Number, required: true },
   orderId: { type: String, required: true },
-  Date_Time: { type: String, required: true },
+  Date: { type: String, required: true },
   businessName: { type: String, required: true },
 });
 

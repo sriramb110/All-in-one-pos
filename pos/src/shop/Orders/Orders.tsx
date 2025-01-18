@@ -153,8 +153,8 @@ function Orders() {
           <h1>Order Details:</h1>
           <ul>
             <li>
-              <p>Date | Time:</p>
-              <p>{order.Date_Time}</p>
+              <p>Date :</p>
+              <p>{order.Date}</p>
             </li>
             <li>
               <p>Order Status:</p>

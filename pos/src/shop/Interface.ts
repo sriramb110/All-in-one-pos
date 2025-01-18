@@ -37,7 +37,7 @@ export interface Order {
   orderList: OrderItem[];
   totalPrice: number;
   orderId: string;
-  Date_Time: string;
+  Date: string;
   businessName: string;
 }
 

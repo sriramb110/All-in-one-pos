@@ -9,7 +9,7 @@ const OrdersDetails = new mongoose.Schema({
   orderList: { type: [Object], required: true },
   totalPrice: { type: Number, required: true },
   orderId: { type: String, required: true },
-  Date_Time: { type: String, required: true },
+  Date: { type: String, required: true },
   businessName: { type: String, required: true },
 });
 
@@ -35,14 +35,14 @@ const authenticateToken = (req, res, next) => {
 
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    const { Customerdata, payment, orderList, Date_Time, orderId, totalPrice } =
+    const { Customerdata, payment, orderList, Date, orderId, totalPrice } =
     req.body;
     const businessName = req.user.business;
     if (
       !Customerdata ||
       !payment ||
       !orderList ||
-      !Date_Time ||
+      !Date ||
       !orderId ||
       !totalPrice ||
       !businessName
@@ -54,7 +54,7 @@ router.post("/", authenticateToken, async (req, res) => {
       Customerdata,
       payment,
       orderList,
-      Date_Time,
+      Date,
       orderId,
       totalPrice,
       businessName,

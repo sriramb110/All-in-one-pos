@@ -3,6 +3,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import InventoryMenu from './InventoryMenu'
 import Inward from './Inward';
 import Stock from './Stock';
+import Outward from './Outward';
+import InternalExpensive from './InternalExpensive';
 
 function InventoryNavigator() {
   return (
@@ -12,9 +14,9 @@ function InventoryNavigator() {
         <Routes>
           <Route path="/*" element={<Navigate to="/inventory-management/inward" replace />} />
           <Route path="/inward" element={< Inward />} />
-          <Route path="/outward" element={<Inward />} />
+          <Route path="/outward" element={<Outward />} />
           <Route path="/stock" element={<Stock />} />
-          <Route path="/internal-expensive" element={<Inward />} />
+          <Route path="/internal-expensive" element={<InternalExpensive />} />
         </Routes>
       </div>
     </div>

@@ -191,14 +191,14 @@ export const postOrders = async (
   orderList: any,
   totalPrice:number,
   orderId:string,
-  Date_Time:string
+  Date:string
 ) => {
   try {
     const response = await api.post(`/order`, {
       Customerdata,
       payment,
       orderList,
-      Date_Time,
+      Date,
       orderId,
       totalPrice,
     });

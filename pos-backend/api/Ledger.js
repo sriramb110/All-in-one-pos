@@ -100,11 +100,11 @@ router.get("/:CustomerPhoneNumber", authenticateToken, async (req, res) => {
               }
             );
 
-            const { payment, Date_Time, totalPrice, orderId } =
+            const { payment, Date, totalPrice, orderId } =
               response.data.order;
             return {
               orderPayment: payment,
-              orderDate: Date_Time,
+              orderDate: Date,
               orderPrice: totalPrice,
               orderId,
             };
