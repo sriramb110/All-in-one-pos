@@ -72,9 +72,9 @@ function CustomerLedgerDetails() {
 
     ledger?.orderDetails.map((order) => {
       const data = {
-        orderPrice: order.orderPrice,
+        orderPrice: order.orderPrice - order.orderPayment.discount,
         receivedPrice: order.orderPayment?.receivedPrice,
-        balance: order.orderPrice - order.orderPayment?.receivedPrice,
+        balance: order.orderPrice - order.orderPayment.discount - order.orderPayment?.receivedPrice,
         discount: order.orderPayment.discount,
       };
       let pay = -data.balance + priceS;
@@ -86,16 +86,16 @@ function CustomerLedgerDetails() {
           const payment = {
             paymentMethod: payMode,
             discount: data.discount,
-            receivedPrice: data.orderPrice,
+            receivedPrice: data.orderPrice ,
           };
           console.log(payment);
-          priceS = priceS - data.balance
+          priceS = priceS - data.orderPrice
           patchOrder(order.orderId, payment)
             .then((res) => console.log(res))
             .catch((error) => {
               console.log(error);
             });
-        } else if (data.balance >= priceS && priceS > 0 && data.balance > 0) {
+        } else if (data.balance > priceS && priceS > 0 && data.balance > 0) {
           const payment = {
             paymentMethod: payMode,
             discount: data.discount,

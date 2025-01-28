@@ -177,6 +177,60 @@ router.patch("/:orderId", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/outward", authenticateToken, async (req, res) => {
+  try {
+    const { businessName } = req.user;
+    const { from, to } = req.query;
+
+    if (!businessName) {
+      return res.status(400).json({ error: "Missing business name in token." });
+    }
+    if (!from || !to) {
+      return res.status(400).json({ error: "Missing date range in query." });
+    }
+
+    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!dateRegex.test(from) || !dateRegex.test(to)) {
+      return res
+        .status(400)
+        .json({ error: "Invalid date format. Use MM/DD/YYYY." });
+    }
+
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
+    const ordersRecords = await Orders.find({
+      businessName,
+      Date: {
+        $gte: fromDate.toISOString(),
+        $lte: toDate.toISOString(),
+      },
+    });
+
+    if (!ordersRecords.length) {
+      return res
+        .status(404)
+        .json({ message: "No orders found for the specified range." });
+    }
+
+    const enrichedOrders = ordersRecords.map((order) => ({
+      ...order.toObject(),
+      totalQuantity: order.orderList.reduce(
+        (sum, item) => sum + (item.orderQty || 0),
+        0
+      ),
+      totalPrice: order.totalPrice || 0,
+    }));
+
+    res.status(200).json(enrichedOrders);
+  } catch (error) {
+    console.error("Error in outward endpoint:", error.message);
+    res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+
+
 
 
 
