@@ -99,3 +99,8 @@ export interface StockRecord {
   totalInward: number;
   totalBuyPrice: number;
 }
+
+export interface ProductStock {
+  ProductName: string;
+  totalQty: number;
+}

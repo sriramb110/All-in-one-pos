@@ -54,7 +54,7 @@ function Completed({
       orderList,
       totalAmount,
       OrdersId,
-      dateorder
+      now
     )
       .then((res) => {
         ordersuccess();

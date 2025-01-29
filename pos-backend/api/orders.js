@@ -10,6 +10,7 @@ const OrdersDetails = new mongoose.Schema({
   totalPrice: { type: Number, required: true },
   orderId: { type: String, required: true },
   Date: { type: String, required: true },
+  date: { type: Date, required: true },
   businessName: { type: String, required: true },
 });
 
@@ -35,14 +36,14 @@ const authenticateToken = (req, res, next) => {
 
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    const { Customerdata, payment, orderList, Date, orderId, totalPrice } =
-    req.body;
+    const { Customerdata, payment, orderList, date, orderId, totalPrice } =
+      req.body;
     const businessName = req.user.business;
     if (
       !Customerdata ||
       !payment ||
       !orderList ||
-      !Date ||
+      !date ||
       !orderId ||
       !totalPrice ||
       !businessName
@@ -50,11 +51,14 @@ router.post("/", authenticateToken, async (req, res) => {
       return res.status(400).json({ error: "Missing required fields." });
     }
 
+    const formattedDate = new Date(date).toLocaleDateString("en-GB");
+
     const order = new Orders({
       Customerdata,
       payment,
       orderList,
-      Date,
+      date: new Date(date),
+      Date: formattedDate,
       orderId,
       totalPrice,
       businessName,
@@ -62,22 +66,22 @@ router.post("/", authenticateToken, async (req, res) => {
     const savedOrder = await order.save();
 
     for (const item of orderList) {
-      const {orderQty,ids} = item
+      const { orderQty, ids } = item;
 
-      if(!ids || orderQty == null) continue;
+      if (!ids || orderQty == null) continue;
 
       const product = await Product.findById(ids.ProductId);
       if (product) {
         product.stock -= orderQty;
-        await product.save(); 
+        await product.save();
       } else {
-        console.log("Product not found for ID:", ids.ProductId); // Debug log
+        console.log("Product not found for ID:", ids.ProductId);
       }
     }
-      res.status(201).json({
-        message: "Order created successfully.",
-        order: savedOrder,
-      });
+    res.status(201).json({
+      message: "Order created successfully.",
+      order: savedOrder,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -117,6 +121,57 @@ router.get("/", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/outward", authenticateToken, async (req, res) => {
+  try {
+    const businessName = req.user.business;
+    const { from, to } = req.query;
+
+    if (!businessName) {
+      return res.status(400).json({ error: "Missing business name in token." });
+    }
+    if (!from || !to) {
+      return res.status(400).json({ error: "Missing date range in query." });
+    }
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
+    const ordersRecords = await Orders.find({
+      businessName,
+      date: {
+        $gte: from,
+        $lte: to,
+      },
+    });
+
+    if (!ordersRecords.length) {
+      return res
+        .status(404)
+        .json({ message: "No orders found for the specified range." });
+    }
+
+    // Flatten and consolidate products
+    const productSales = ordersRecords
+      .flatMap((order) => order.orderList) // Flatten the orderList arrays
+      .reduce((acc, product) => {
+        const { ProductName, orderQty } = product;
+
+        if (!acc[ProductName]) {
+          acc[ProductName] = { ProductName, totalQty: 0 };
+        }
+        acc[ProductName].totalQty += orderQty;
+
+        return acc;
+      }, {});
+
+    // Convert the grouped object to an array
+    const consolidatedProducts = Object.values(productSales);
+
+    res.status(200).json(consolidatedProducts);
+  } catch (error) {
+    console.error("Error in outward endpoint:", error.message);
+    res.status(500).json({ error: "Internal server error." });
+  }
+});
 
 router.get("/:id", authenticateToken, async (req, res) => {
   try {
@@ -158,7 +213,7 @@ router.patch("/:orderId", authenticateToken, async (req, res) => {
     const updatedOrder = await Orders.findOneAndUpdate(
       { orderId, businessName: req.user.business },
       { $set: { payment } },
-      { new: true } 
+      { new: true }
     );
 
     if (!updatedOrder) {
@@ -176,62 +231,5 @@ router.patch("/:orderId", authenticateToken, async (req, res) => {
       .json({ error: "An error occurred while updating the payment." });
   }
 });
-
-router.get("/outward", authenticateToken, async (req, res) => {
-  try {
-    const { businessName } = req.user;
-    const { from, to } = req.query;
-
-    if (!businessName) {
-      return res.status(400).json({ error: "Missing business name in token." });
-    }
-    if (!from || !to) {
-      return res.status(400).json({ error: "Missing date range in query." });
-    }
-
-    const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-    if (!dateRegex.test(from) || !dateRegex.test(to)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid date format. Use MM/DD/YYYY." });
-    }
-
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-
-    const ordersRecords = await Orders.find({
-      businessName,
-      Date: {
-        $gte: fromDate.toISOString(),
-        $lte: toDate.toISOString(),
-      },
-    });
-
-    if (!ordersRecords.length) {
-      return res
-        .status(404)
-        .json({ message: "No orders found for the specified range." });
-    }
-
-    const enrichedOrders = ordersRecords.map((order) => ({
-      ...order.toObject(),
-      totalQuantity: order.orderList.reduce(
-        (sum, item) => sum + (item.orderQty || 0),
-        0
-      ),
-      totalPrice: order.totalPrice || 0,
-    }));
-
-    res.status(200).json(enrichedOrders);
-  } catch (error) {
-    console.error("Error in outward endpoint:", error.message);
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
-
-
-
-
-
 
 module.exports = router;

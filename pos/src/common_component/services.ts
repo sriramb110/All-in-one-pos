@@ -191,14 +191,14 @@ export const postOrders = async (
   orderList: any,
   totalPrice:number,
   orderId:string,
-  Date:string
+  date:Date
 ) => {
   try {
     const response = await api.post(`/order`, {
       Customerdata,
       payment,
       orderList,
-      Date,
+      date,
       orderId,
       totalPrice,
     });
@@ -298,6 +298,15 @@ export const stockInward = async()=>{
     const response = await api.get(`/stockManagement/inward`)
     return response
   }catch (error){
+    throw error
+  }
+}
+
+export const sales = async(from:Date, to:Date)=>{
+  try{
+    const response = await api.get(`/order/outward?from=${from}&to=${to}`)
+    return response
+  } catch (error) {
     throw error
   }
 }
