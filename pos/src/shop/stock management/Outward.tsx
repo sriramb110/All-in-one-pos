@@ -14,7 +14,6 @@ const Outward: React.FC = () => {
     From: new Date(),
     to: new Date(),
   });
-
   const [salesProducts, setSalesPrdoucts] = useState<ProductStock[]>([])
 
   useEffect(() => {
@@ -22,10 +21,12 @@ const Outward: React.FC = () => {
   }, []);
 
   const getOrders = () => {
-    const from = date.From;
-    const to = date.to;
+    const from = new Date(date.From);
+    const to = new Date(date.to);
+
     from.setHours(0, 0, 0, 0);
     to.setHours(23, 59, 59, 999);
+
     sales(from, to)
       .then((res) => setSalesPrdoucts(res.data))
       .catch((error) => setSalesPrdoucts([]));
@@ -46,7 +47,9 @@ const Outward: React.FC = () => {
     id: item.ProductName,
     serial: index + 1,
     productName: item.ProductName,
-    salesQty:item.totalQty
+    salesQty:item.totalQty,
+    productPrice: item.totalAmount,
+    totalSales: Number(item.totalAmount) * item.totalQty
   }))
 
   const columns: GridColDef[]=[
@@ -59,7 +62,9 @@ const Outward: React.FC = () => {
       disableColumnMenu: true,
     },
     { field: "productName", headerName: "Product Name", flex: 1 },
-    { field: "salesQty", headerName: "Total Sales Qty", flex: 1 },
+    { field: "salesQty", headerName: "Total Sales Qty", flex: 1, type: "number", },
+    { field: "productPrice", headerName: "Price", flex: 1, type: "number", },
+    { field: "totalSales", headerName: "Total Price", flex: 1, type: "number", },
   ]
 
   const handleSelectedData = (selectedRows: any[]) => {
@@ -76,17 +81,23 @@ const Outward: React.FC = () => {
         <div>
           <label>From: </label>
           <input
+            className="border border-black px-2 rounded-xl mr-2"
             type="date"
             value={date.From.toISOString().split("T")[0]}
             onChange={(e) => handleDateChange(e, "From")}
+            max={new Date().toISOString().split("T")[0]}
+            onKeyDown={(e) => e.preventDefault()}
           />
         </div>
         <div>
           <label>To: </label>
           <input
+          className="border border-black px-2 rounded-xl"
             type="date"
             value={date.to.toISOString().split("T")[0]}
             onChange={(e) => handleDateChange(e, "to")}
+            max={new Date().toISOString().split("T")[0]}
+            onKeyDown={(e) => e.preventDefault()}
           />
         </div>
         <button className="confirm" onClick={getOrders}>

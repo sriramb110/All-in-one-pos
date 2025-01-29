@@ -152,13 +152,12 @@ router.get("/outward", authenticateToken, async (req, res) => {
     // Flatten and consolidate products
     const productSales = ordersRecords
       .flatMap((order) => order.orderList) // Flatten the orderList arrays
-      .reduce((acc, product) => {
-        const { ProductName, orderQty } = product;
-
+      .reduce((acc, { ProductName, orderQty, Amount }) => {
         if (!acc[ProductName]) {
-          acc[ProductName] = { ProductName, totalQty: 0 };
+          acc[ProductName] = { ProductName, totalQty: 0, totalAmount: 0 };
         }
         acc[ProductName].totalQty += orderQty;
+        acc[ProductName].totalAmount = Amount; // Add total amount
 
         return acc;
       }, {});

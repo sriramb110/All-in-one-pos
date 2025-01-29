@@ -103,4 +103,5 @@ export interface StockRecord {
 export interface ProductStock {
   ProductName: string;
   totalQty: number;
+  totalAmount: string;
 }
