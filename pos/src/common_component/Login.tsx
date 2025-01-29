@@ -163,7 +163,15 @@ function Login() {
         setLoadong(true)
         if (login) {
             loginUser(formData.username, formData.password).then((res)=>{
+                console.log(res)
                 sessionStorage.setItem('jsonwebtoken',res.data.token)
+                sessionStorage.setItem('businessName', res.data.user.businessName)
+                sessionStorage.setItem('dob', res.data.user.dob)
+                sessionStorage.setItem('emailId', res.data.user.emailId)
+                sessionStorage.setItem('name', res.data.user.name)
+                sessionStorage.setItem('phoneNumber', res.data.user.phoneNumber)
+                sessionStorage.setItem('userId', res.data.user.userId)
+                sessionStorage.setItem('username', res.data.user.username)
                 window.location.reload()
                 setLoadong(false)
             }).catch((error)=>{

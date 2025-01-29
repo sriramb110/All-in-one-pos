@@ -37,8 +37,18 @@ router.post('/', async (req, res) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET,  { expiresIn: 8 * 60 * 60 });
 
     res.status(200).json({
-      message: 'Login successful',  
-      token, 
+      message: "Login successful",
+      token,
+      user: {
+        userId: user._id,
+        username: user.username,
+        name: user.name,
+        dob: user.dob,
+        phoneNumber: user.phoneNumber,
+        emailId: user.emailId,
+        businessName: user.businessName,
+        createdAt: user.createdAt,
+      },
     });
   } catch (err) {
     console.error('Error:', err.message);

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 function Menu() {
   const [visible, setVisible] = useState<boolean>(false);
   const [logout, setLogout] = useState<boolean>(false);
-  const navigator= useNavigate()
+  const navigator = useNavigate()
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,20 +45,27 @@ function Menu() {
       </Link>
     );
   };
-  const confirmLogout=()=>{
-      sessionStorage.removeItem("jsonwebtoken");
-      setTimeout(() => {
-          navigator('/')
-      }, 1000);
+  const confirmLogout = () => {
+    sessionStorage.removeItem("jsonwebtoken");
+    sessionStorage.removeItem('jsonwebtoken')
+    sessionStorage.removeItem('businessName')
+    sessionStorage.removeItem('dob')
+    sessionStorage.removeItem('emailId')
+    sessionStorage.removeItem('name')
+    sessionStorage.removeItem('phoneNumber')
+    sessionStorage.removeItem('userId')
+    sessionStorage.removeItem('username')
+    setTimeout(() => {
+      navigator('/')
+    }, 1000);
   }
 
   return (
     <div className=" w-auto h-auto ">
       <div className="bg-cyan-600 rounded-br-full">
         <div
-          className={`flex flex-col w-auto items-center h-screen mb-0 mt-0 rounded-e-3xl bg-fuchsia-400 p-2 transition-all duration-300 overflow-hidden ${
-            visible ? "" : "menu"
-          }`}
+          className={`flex flex-col w-auto items-center h-screen mb-0 mt-0 rounded-e-3xl bg-fuchsia-400 p-2 transition-all duration-300 overflow-hidden ${visible ? "" : "menu"
+            }`}
         >
           <div className="flex flex-col w-full justify-evenly items-center h-full menu-icons">
             {icons(iconMap["home"], "/home", "HOME")}
@@ -69,9 +76,8 @@ function Menu() {
             {icons(iconMap["logout"], "Logout", "Logout")}
           </div>
           <div
-            className={`flex flex-col w-3/5 justify-evenly items-center h-full ${
-              visible ? "" : "max-menu"
-            }`}
+            className={`flex flex-col w-3/5 justify-evenly items-center h-full ${visible ? "" : "max-menu"
+              }`}
           >
             {iconSmall(iconMap["home"], "/home")}
             {iconSmall(iconMap["products"], "/orders")}
