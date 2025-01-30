@@ -2,23 +2,30 @@ import React, { useEffect, useState } from "react";
 import iconMap from "../../assets/Icons";
 import { Link, useNavigate } from "react-router-dom";
 
-function Menu() {
+type Colors = {
+  hBgColor: string;
+  bgMColor: string;
+}
+
+function Menu({bgMColor , hBgColor}:Colors) {
   const [visible, setVisible] = useState<boolean>(false);
   const [logout, setLogout] = useState<boolean>(false);
   const navigator = useNavigate()
-
+  
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1000 || window.innerHeight < 700) {
         setVisible(false);
       }
     };
+
     handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+
   }, []);
 
   const icons = (IconComponent: React.ElementType, path: any, name: any) => {
@@ -62,9 +69,9 @@ function Menu() {
 
   return (
     <div className=" w-auto h-auto ">
-      <div className="bg-cyan-600 rounded-br-full">
+      <div className={`${hBgColor} rounded-br-full`}>
         <div
-          className={`flex flex-col w-auto items-center h-screen mb-0 mt-0 rounded-e-3xl bg-fuchsia-400 p-2 transition-all duration-300 overflow-hidden ${visible ? "" : "menu"
+          className={`flex flex-col w-auto items-center h-screen mb-0 mt-0 rounded-e-3xl ${bgMColor} p-2 transition-all duration-300 overflow-hidden ${visible ? "" : "menu"
             }`}
         >
           <div className="flex flex-col w-full justify-evenly items-center h-full menu-icons">
@@ -88,7 +95,7 @@ function Menu() {
           </div>
         </div>
       </div>
-      <div className="pt-3 max-menu-icon h-16 bg-cyan-600">
+      <div className={`pt-3 max-menu-icon h-16 ${hBgColor}`}>
         <button className="icon_btn" onClick={() => setVisible(true)}>
           {iconSmall(iconMap["menu"], null)}
         </button>

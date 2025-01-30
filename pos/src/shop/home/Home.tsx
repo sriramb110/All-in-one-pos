@@ -209,7 +209,7 @@ function Home() {
             </h1>
             <Link
               to={"/setting/products"}
-              className=" px-2 mx-2 my-1 w-64 h-10 flex flex-col border-2 justify-center items-center border-gray-600 rounded-md bg-indigo-500 text-white text-xl shadow-md cursor-pointer"
+              className=" px-2 mx-2 my-1 w-auto h-10 flex flex-col border-2 justify-center items-center border-gray-600 rounded-md bg-indigo-500 text-white text-xl shadow-md cursor-pointer"
             >
               + Products or Category
             </Link>

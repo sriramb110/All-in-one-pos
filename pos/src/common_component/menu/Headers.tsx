@@ -4,7 +4,11 @@ import iconMap from "../../assets/Icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSearch } from "./SearchContext";
 
-function Headers() {
+type Colors = {
+  hBgColor: string;
+}
+
+function Headers({ hBgColor }: Colors) {
   const { searchTerm, setSearchTerm } = useSearch();
   const [bussnessName, setBussnessName] = useState<string | null>(null);
   const [today, setToday] = useState({
@@ -17,6 +21,7 @@ function Headers() {
     const updateTime = () => {
       const time = new Date().toLocaleTimeString();
       const date = new Date().toLocaleDateString();
+      
       setToday({
         date: date,
         time: time,
@@ -66,7 +71,7 @@ function Headers() {
   };
 
   return (
-    <div className="w-auto h-16 bg-cyan-600 p-4 text-white flex">
+    <div className={`w-auto h-16 ${hBgColor} p-4 text-white flex`}>
       <div className="pl-5 flex justify-between w-full pr-10">
         <h1 className="text-3xl ml-2 w-2/6">{headerName()}</h1>
         <input
