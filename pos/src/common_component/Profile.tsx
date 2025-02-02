@@ -1,13 +1,16 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import downloadImage from "../assets/download.png";
 import MyProfileComponent from "../shop/profile/myProfile";
 import WorkProfileComponent from "../shop/profile/workProfile";
 import ProfileThemeComponent from "../shop/profile/profileTheme";
+import { getProfile } from "./services";
+import { Profiles } from "../shop/Interface";
 
 const Profile: React.FC = () => {
     const firstContainerRef = useRef<HTMLDivElement>(null);
     const secondContainerRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [profile, setProfile] = useState<Profiles>()
 
     const scrollToElement = (elementRef: React.RefObject<HTMLDivElement>) => {
         if (elementRef.current) {
@@ -29,6 +32,11 @@ const Profile: React.FC = () => {
     const handleScrollToProfile = () => scrollToElement(containerRef);
     const handleScrollToWorkProfile = () => scrollToElement(firstContainerRef);
     const handleScrollToProfileTheme = () => scrollToElement(secondContainerRef);
+
+
+    useEffect(()=>{
+        getProfile().then((res) => { setProfile(res.data)}).catch((error)=>console.error(error))
+    },[])
 
     return (
         <div className="w-full h-full overflow-auto flex bg-gradient-to-r from-gray-50 to-blue-100">
@@ -60,7 +68,7 @@ const Profile: React.FC = () => {
                 <div className="h-screen w-full flex items-center justify-start ">
                     <div style={{ width: "11%" }}></div>
                     <div className="w-full h-full pl-2">
-                        <MyProfileComponent />
+                        {profile  && <MyProfileComponent profile={profile} />}
                     </div>
                 </div>
                 <div

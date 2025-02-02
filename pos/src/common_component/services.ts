@@ -1,4 +1,5 @@
 import api from '../axios';
+import { Profiles } from '../shop/Interface';
 
 export const signupUser = async (formData: any) => {
   try {
@@ -310,3 +311,22 @@ export const sales = async(from:Date, to:Date)=>{
     throw error
   }
 }
+
+export const getProfile = async()=>{
+  try{
+    const response = await api.get(`/profile`)
+    return response
+  } catch (error) {
+    throw error
+  }
+}
+
+export const putProfile = async (putData: Partial<Profiles>) => {
+  try {
+    const response = await api.patch(`/profile`,  putData )
+    return response
+  } catch (error) {
+    throw error
+  }
+}
+

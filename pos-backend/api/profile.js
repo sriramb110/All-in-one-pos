@@ -37,27 +37,29 @@ const authenticateToken = (req, res, next) => {
 // ✅ Get Profile by Business Name (GET)
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    const { business } = req.user;
+    const { business } = req.user; // Get business name from JWT
+
     if (!business) {
-      return res.status(400).json({ message: "Business name is required." });
+      return res.status(400).json({ message: "Invalid business name" });
     }
 
-    const businessProfile = await BusinessProfile.findOne({
-      businessName: business,
-    });
+    const user = await User.findOne({ businessName: business }).select(
+      "-password"
+    );
 
-    if (!businessProfile) {
-      return res.status(404).json({ message: "Business Profile not found" });
+    if (!user) {
+      return res.status(404).json({ message: "Profile not found" });
     }
 
-    res.json(businessProfile);
+    res.json(user);
   } catch (err) {
-    console.error("Error fetching business profile:", err);
+    console.error("Error fetching profile:", err);
     res
       .status(500)
       .json({ message: "Internal server error", error: err.message });
   }
 });
+
 
 // ✅ Create or Update Profile (POST)
 router.post("/", authenticateToken, async (req, res) => {

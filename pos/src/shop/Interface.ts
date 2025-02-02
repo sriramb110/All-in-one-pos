@@ -105,3 +105,78 @@ export interface ProductStock {
   totalQty: number;
   totalAmount: string;
 }
+
+export interface Profile {
+  _id: string;
+  username: string;
+  name: string;
+  dob: string;
+  phoneNumber: string;
+  businessName: string;
+  emailId: string;
+  addressLine1: string;
+  addressLine2?: string;
+  bio?: string;
+  businessProfile: string;
+  country: string;
+  district: string;
+  state: string;
+  businessType: string;
+  contactEmail: string;
+  contactPhone: string;
+  establishedYear: number;
+  ownerName: string;
+  registrationNumber: string;
+}
+
+export interface Profiles {
+  name: string;
+  phoneNumber: string;
+  emailId: string;
+  dob: string;
+  addressLine1: string;
+  addressLine2?: string;
+  state: string;
+  district: string;
+  country: string;
+  businessName: string;
+  bio?: string;
+  businessProfile: string;
+  businessType: string;
+  contactEmail: string;
+  contactPhone: string;
+  establishedYear: number;
+  ownerName: string;
+  registrationNumber: string;
+}
+
+export interface MyProfiles{
+  name: string;
+  phoneNumber: string;
+  emailId: string;
+  dob: string;
+  addressLine1: string;
+  addressLine2?: string;
+  state: string;
+  district: string;
+  country: string;
+}
+
+export interface BusinessProfile {
+  businessName: string;
+  bio?: string;
+  businessProfile: string;
+  businessType: string;
+  contactEmail: string;
+  contactPhone: string;
+  establishedYear: number;
+  ownerName: string;
+  registrationNumber: string;
+}
+
+export interface PersonalDetail {
+  value: keyof Profiles;
+  header: string;
+  content: string;
+  editable?: boolean;
+}
