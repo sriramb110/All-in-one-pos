@@ -6,7 +6,11 @@ import ProfileThemeComponent from "../shop/profile/profileTheme";
 import { getProfile } from "./services";
 import { Profiles } from "../shop/Interface";
 
-const Profile: React.FC = () => {
+type ColorProps = {
+    themChange: () => void
+}
+
+function Profile({ themChange }: ColorProps) {
     const firstContainerRef = useRef<HTMLDivElement>(null);
     const secondContainerRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -34,16 +38,20 @@ const Profile: React.FC = () => {
     const handleScrollToProfileTheme = () => scrollToElement(secondContainerRef);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         profileData()
-    },[])
+    }, [])
 
-    function profileData(){
+    function profileData() {
         getProfile().then((res) => { setProfile(res.data) }).catch((error) => console.error(error))
     }
 
-    const editSuccess = ()=>{
+    const editSuccess = () => {
         profileData()
+    }
+
+    const updateThemes = () => {
+        themChange()
     }
 
     return (
@@ -76,7 +84,7 @@ const Profile: React.FC = () => {
                 <div className="h-screen w-full flex items-center justify-start ">
                     <div style={{ width: "11%" }}></div>
                     <div className="w-full h-full pl-2">
-                        {profile && <MyProfileComponent profile={profile} editSuccess={editSuccess}/>}
+                        {profile && <MyProfileComponent profile={profile} editSuccess={editSuccess} />}
                     </div>
                 </div>
                 <div
@@ -91,7 +99,7 @@ const Profile: React.FC = () => {
                     className="h-screen w-full flex items-center justify-start bg-gradient-to-r "
                 >
                     <div style={{ width: "11%" }}></div>
-                    <div className="w-full h-full pl-2"><ProfileThemeComponent /></div>
+                    <div className="w-full h-full pl-2"><ProfileThemeComponent updateThemes={updateThemes} /></div>
                 </div>
             </div>
         </div>

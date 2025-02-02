@@ -16,20 +16,30 @@ function ShopNavigator() {
   const [font, setFont] = useState<string>("font-sans")
   const [bgMColor, setMBgColor] = useState<string>("bg-fuchsia-500 text-black border-fuchsia-700")
   const [hBgColor, setHBgColor] = useState<string>("bg-blue-500 text-white border-blue-700")
-  useEffect(()=>{
-    const Fontthemes = sessionStorage.getItem("FontThemesShop")
-    if (Fontthemes) {setFont(Fontthemes)} else {setFont("font-sans")}
+  
+  useEffect(() => {
+    theme()
+  }, [])
 
-    const bgMenu = sessionStorage.getItem("MenuThemesShop");
+  function theme() {
+    const Fontthemes = localStorage.getItem("FontThemesShop")
+    if (Fontthemes) { setFont(Fontthemes) } else { setFont("font-sans") }
+
+    const bgMenu = localStorage.getItem("MenuThemesShop");
     if (bgMenu) { setMBgColor(bgMenu) } else { setMBgColor("bg-fuchsia-500 text-black border-fuchsia-700") };
 
-    const bgHeader = sessionStorage.getItem("HeaderThemesShop");
+    const bgHeader = localStorage.getItem("HeaderThemesShop");
     if (bgHeader) { setHBgColor(bgHeader) } else { setHBgColor("bg-blue-500 text-white border-blue-700") };
-  },[])
+  }
+
+  const themChange = () => {
+    theme()
+  }
+
   return (
     <SearchProvider>
       <div className={`flex overflow-hidden h-screen w-screen pb-1 ${font}`}>
-        <Menu bgMColor={bgMColor} hBgColor={hBgColor}/>
+        <Menu bgMColor={bgMColor} hBgColor={hBgColor} />
         <div className="w-full h-full  overflow-hidden">
           <Headers hBgColor={hBgColor} />
           <div className="overflow-hidden w-full h-full pb-5 p-0.5">
@@ -42,7 +52,7 @@ function ShopNavigator() {
               <Route path="/order/:id" element={<Orders />} />
               <Route path="/wallet" element={<CustomerLedger />} />
               <Route path="/wallet/:id" element={<CustomerLedgerDetails />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile" element={<Profile themChange={themChange} />} />
               <Route path="/inventory-management/*" element={<InventoryNavigator />} />
             </Routes>
           </div>

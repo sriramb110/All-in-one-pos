@@ -128,7 +128,7 @@ function MyProfile({ profile, editSuccess }: ProfileProps) {
                   className="border border-black rounded-2xl px-2 py-0.5 text-xl w-1/2 bg-transparent"
                 />
               ) : (
-                <p className="w-fit p-1 text-xl">{item.content}</p>
+                <p className="w-fit px-1 text-xl">{item.content}</p>
               )}
             </div>
           ))}

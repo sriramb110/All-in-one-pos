@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-function ProfileTheme() {
+type ColorProps = {
+    updateThemes: () => void;
+}
+
+function ProfileTheme({ updateThemes }: ColorProps) {
     const [theme, setTheme] = useState<string>("Colors");
     const [colorTheme, setColorTheme] = useState<string>("");
     const [fontStyle, setFontStyle] = useState<string>("Sans-serif");
@@ -70,17 +74,18 @@ function ProfileTheme() {
         }));
     };
 
-    const setThemes = ()=>{
-        if (choseTheme.header){
-            sessionStorage.setItem("HeaderThemesShop", themeStyles[choseTheme.header])
+    const setThemes = () => {
+        if (choseTheme.header) {
+            localStorage.setItem("HeaderThemesShop", themeStyles[choseTheme.header])
 
         }
         if (choseTheme.menu) {
-            sessionStorage.setItem("MenuThemesShop", themeStyles[choseTheme.menu])
-        } 
-        if (fontStyle) {
-            sessionStorage.setItem("FontThemesShop",fontStyles[fontStyle])
+            localStorage.setItem("MenuThemesShop", themeStyles[choseTheme.menu])
         }
+        if (fontStyle) {
+            localStorage.setItem("FontThemesShop", fontStyles[fontStyle])
+        }
+        updateThemes()
     }
 
 
