@@ -15,8 +15,6 @@ const profileSchema = Joi.object({
   state: Joi.string().required(),
   district: Joi.string().required(),
   country: Joi.string().required(),
-  businessProfile: Joi.string().required(),
-  bio: Joi.string().allow("").optional(),
 });
 
 // ✅ Middleware: Authenticate Token
@@ -61,7 +59,6 @@ router.get("/", authenticateToken, async (req, res) => {
 });
 
 
-// ✅ Create or Update Profile (POST)
 router.post("/", authenticateToken, async (req, res) => {
   try {
     const { error } = profileSchema.validate(req.body);

@@ -323,7 +323,7 @@ export const getProfile = async()=>{
 
 export const putProfile = async (putData: Partial<Profiles>) => {
   try {
-    const response = await api.patch(`/profile`,  putData )
+    const response = await api.put(`/profile`,  putData )
     return response
   } catch (error) {
     throw error

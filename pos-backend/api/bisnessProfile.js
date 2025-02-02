@@ -16,6 +16,8 @@ const businessProfileSchema = Joi.object({
   ownerName: Joi.string().required(),
   contactEmail: Joi.string().email().required(),
   contactPhone: Joi.string().required(),
+  businessProfile: Joi.string().required(),
+  bio: Joi.string().allow("").optional(),
 });
 
 // ✅ Middleware: Authenticate Token
