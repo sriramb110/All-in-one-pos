@@ -10,6 +10,7 @@ const router = express.Router();
 
 // ✅ Validation schema for business profile
 const businessProfileSchema = Joi.object({
+  businessName: Joi.string().required(),
   businessType: Joi.string().required(),
   registrationNumber: Joi.string().required(),
   establishedYear: Joi.number().required(),

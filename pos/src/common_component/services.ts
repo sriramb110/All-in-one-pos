@@ -330,3 +330,12 @@ export const putProfile = async (putData: Partial<Profiles>) => {
   }
 }
 
+export const putBisProfile = async (putData: Partial<Profiles>) => {
+  try {
+    const response = await api.patch(`/bisnessProfile`, putData)
+    return response
+  } catch (error) {
+    throw error
+  }
+}
+

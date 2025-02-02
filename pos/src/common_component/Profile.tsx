@@ -35,8 +35,16 @@ const Profile: React.FC = () => {
 
 
     useEffect(()=>{
-        getProfile().then((res) => { setProfile(res.data)}).catch((error)=>console.error(error))
+        profileData()
     },[])
+
+    function profileData(){
+        getProfile().then((res) => { setProfile(res.data) }).catch((error) => console.error(error))
+    }
+
+    const editSuccess = ()=>{
+        profileData()
+    }
 
     return (
         <div className="w-full h-full overflow-auto flex bg-gradient-to-r from-gray-50 to-blue-100">
@@ -68,7 +76,7 @@ const Profile: React.FC = () => {
                 <div className="h-screen w-full flex items-center justify-start ">
                     <div style={{ width: "11%" }}></div>
                     <div className="w-full h-full pl-2">
-                        {profile  && <MyProfileComponent profile={profile} />}
+                        {profile && <MyProfileComponent profile={profile} editSuccess={editSuccess}/>}
                     </div>
                 </div>
                 <div
@@ -76,7 +84,7 @@ const Profile: React.FC = () => {
                     className="h-screen w-full flex items-center justify-start bg-gradient-to-r "
                 >
                     <div style={{ width: "11%" }}></div>
-                    <div className="w-full h-full pl-2"><WorkProfileComponent /></div>
+                    {profile && <div className="w-full h-full pl-2"><WorkProfileComponent profile={profile} editSuccess={editSuccess} /></div>}
                 </div>
                 <div
                     ref={secondContainerRef}
