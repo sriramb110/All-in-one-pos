@@ -51,7 +51,15 @@ router.post("/", authenticateToken, async (req, res) => {
       return res.status(400).json({ error: "Missing required fields." });
     }
 
-    const formattedDate = new Date(date).toLocaleDateString("en-GB");
+    const formattedDate = new Date(date)
+      .toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .split("/")
+      .reverse()
+      .join("-");
 
     const order = new Orders({
       Customerdata,
@@ -135,6 +143,8 @@ router.get("/outward", authenticateToken, async (req, res) => {
     const fromDate = new Date(from);
     const toDate = new Date(to);
 
+    
+
     const ordersRecords = await Orders.find({
       businessName,
       date: {
@@ -149,20 +159,18 @@ router.get("/outward", authenticateToken, async (req, res) => {
         .json({ message: "No orders found for the specified range." });
     }
 
-    // Flatten and consolidate products
     const productSales = ordersRecords
-      .flatMap((order) => order.orderList) // Flatten the orderList arrays
+      .flatMap((order) => order.orderList) 
       .reduce((acc, { ProductName, orderQty, Amount }) => {
         if (!acc[ProductName]) {
           acc[ProductName] = { ProductName, totalQty: 0, totalAmount: 0 };
         }
         acc[ProductName].totalQty += orderQty;
-        acc[ProductName].totalAmount = Amount; // Add total amount
+        acc[ProductName].totalAmount = Amount; 
 
         return acc;
       }, {});
 
-    // Convert the grouped object to an array
     const consolidatedProducts = Object.values(productSales);
 
     res.status(200).json(consolidatedProducts);

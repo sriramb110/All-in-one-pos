@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import OutputIcon from '@mui/icons-material/Output';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Menubar = ({ IconComponent }: { IconComponent: React.ElementType }) => {
   return (
@@ -53,6 +54,7 @@ const iconMap = {
   products: () => <Menubar IconComponent={LocalMallRoundedIcon} />,
   settings: () => <Menubar IconComponent={SettingsRoundedIcon} />,
   logout: () => <Menubar IconComponent={LogoutRoundedIcon} />,
+  Dashboard: () => <Menubar IconComponent={DashboardIcon} />,
   wallet: () => <Menubar IconComponent={AccountBalanceWalletRoundedIcon} />,
   menu: () => <Menubar IconComponent={MenuTwoToneIcon} />,
   profile: () => <Header IconComponent={AccountCircleIcon} />,

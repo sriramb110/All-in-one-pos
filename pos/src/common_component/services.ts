@@ -287,7 +287,7 @@ export const patchledger = async (number:any,OSB:any) => {
 
 export const postStack = async(postData:any)=>{
   try{
-    const response = await api.post(`/stockManagement`, { AgencyName: postData.AgencyName, StockInward: postData.StockInward, Date: postData.Date   });
+    const response = await api.post(`/stockManagement`, postData);
     return response
   }catch(error){
     throw error;

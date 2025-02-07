@@ -6,6 +6,7 @@ const StockDetails = new mongoose.Schema({
   Date: { type: String, required: true },
   StockInward: { type: [Object], required: true },
   businessName: { type: String, required: true },
+  date: { type: Date, required: true },
 });
 
 // Product Schema for storing product details

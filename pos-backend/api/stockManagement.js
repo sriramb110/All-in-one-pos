@@ -1,6 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const { Product, Stock } = require("../models/stockModels"); 
+const { Product, Stock } = require("../models/stockModels");
 
 const router = express.Router();
 
@@ -20,23 +20,37 @@ const authenticateToken = (req, res, next) => {
 
 router.post("/", authenticateToken, async (req, res) => {
   try {
-    const { StockInward, Date, AgencyName } = req.body;
+    const { StockInward, AgencyName, date } = req.body;
     const businessName = req.user.business;
 
-    if (!AgencyName || !StockInward || !Date || !businessName) {
+    if (!AgencyName || !StockInward || !businessName || !date) {
       return res.status(400).json({ error: "Missing required fields." });
     }
 
-    const stock = new Stock({ StockInward, Date, AgencyName, businessName });
+    const formattedDate = new Date(date)
+      .toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .split("/")
+      .reverse()
+      .join("-");
+
+    const stock = new Stock({
+      StockInward,
+      Date: formattedDate,
+      AgencyName,
+      businessName,
+      date,
+    });
     const saveStock = await stock.save();
 
     for (const item of StockInward) {
       const { id, inward } = item;
-
       if (!id || inward == null) continue;
 
-
-      const product = await Product.findById(id); 
+      const product = await Product.findById(id);
       if (product) {
         product.stock += inward;
         await product.save();
@@ -82,8 +96,14 @@ router.get("/inward", authenticateToken, async (req, res) => {
           })
         );
 
-        const totalInward = enrichedInward.reduce((sum, item) => sum + item.inward, 0);
-        const totalBuyPrice = enrichedInward.reduce((sum, item) => sum + item.buyprice, 0);
+        const totalInward = enrichedInward.reduce(
+          (sum, item) => sum + item.inward,
+          0
+        );
+        const totalBuyPrice = enrichedInward.reduce(
+          (sum, item) => sum + item.buyprice,
+          0
+        );
 
         return {
           ...record.toObject(),
@@ -95,7 +115,90 @@ router.get("/inward", authenticateToken, async (req, res) => {
     );
 
     // Sort records by total inward quantity in descending order
-    const sortedStock = enrichedStock.sort((a, b) => b.totalInward - a.totalInward);
+    const sortedStock = enrichedStock.sort(
+      (a, b) => b.totalInward - a.totalInward
+    );
+
+    res.status(200).json(sortedStock);
+  } catch (error) {
+    console.error("Error fetching stock inward records:", error);
+    res.status(500).json({
+      error: "An error occurred while fetching stock inward records.",
+    });
+  }
+});
+
+router.get("/inward/total", authenticateToken, async (req, res) => {
+  try {
+    const businessName = req.user.business;
+     const { from, to } = req.query;
+
+    if (!businessName) {
+      return res.status(400).json({ error: "Missing business name in token." });
+    }
+
+    if (!from || !to) {
+      return res.status(400).json({ error: "Missing date range in query." });
+    }
+
+     const fromDate = new Date(from);
+     const toDate = new Date(to);
+
+
+         const stockRecords = await Stock.find({
+           businessName,
+           date: {
+             $gte: from,
+             $lte: to,
+           },
+         });
+
+         if (!stockRecords.length) {
+           return res
+             .status(404)
+             .json({ message: "No orders found for the specified range." });
+         }
+
+         
+         // Fetch all inward stock records for the given business
+         
+         console.log(ordersRecords);
+    // Prepare enriched stock data with product names and calculate totals
+    const enrichedStock = await Promise.all(
+      stockRecords.map(async (record) => {
+        const enrichedInward = await Promise.all(
+          record.StockInward.map(async (item) => {
+            const product = await Product.findById(item.id);
+
+            return {
+              ...item,
+              productName: product ? product.productName : "Unknown Product",
+            };
+          })
+        );
+
+        const totalInward = enrichedInward.reduce(
+          (sum, item) => sum + item.inward,
+          0
+        );
+        const totalBuyPrice = enrichedInward.reduce(
+          (sum, item) => sum + item.buyprice,
+          0
+        );
+
+        return {
+          ...record.toObject(),
+          StockInward: enrichedInward,
+          totalInward,
+          totalBuyPrice,
+        };
+      })
+    );
+
+    // Sort records by total inward quantity in descending order
+    const sortedStock = enrichedStock.sort(
+      (a, b) => b.totalInward - a.totalInward
+    );
 
     res.status(200).json(sortedStock);
   } catch (error) {

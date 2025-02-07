@@ -11,6 +11,7 @@ import CustomerLedger from '../shop/Wallet/CustomerLedger';
 import CustomerLedgerDetails from '../shop/Wallet/CustomerLedgerDetails';
 import Profile from '../common_component/Profile';
 import InventoryNavigator from '../shop/stock management/InventoryNavigator';
+import DashboardShop from '../shop/dashboard/DashboardShop';
 
 function ShopNavigator() {
   const [font, setFont] = useState<string>("font-sans")
@@ -49,6 +50,7 @@ function ShopNavigator() {
               <Route path="/home" element={<Home />} />
               <Route path="/setting/*" element={<SettingNavigate />} />
               <Route path="/orders" element={<OverallOrders />} />
+              <Route path="/dashboard" element={<DashboardShop />} />
               <Route path="/order/:id" element={<Orders />} />
               <Route path="/wallet" element={<CustomerLedger />} />
               <Route path="/wallet/:id" element={<CustomerLedgerDetails />} />

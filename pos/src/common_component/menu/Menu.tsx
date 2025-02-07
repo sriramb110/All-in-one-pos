@@ -76,6 +76,7 @@ function Menu({bgMColor , hBgColor}:Colors) {
         >
           <div className="flex flex-col w-full justify-evenly items-center h-full menu-icons">
             {icons(iconMap["home"], "/home", "HOME")}
+            {icons(iconMap["Dashboard"], "/dashboard", "Dashboard")}
             {icons(iconMap["products"], "/orders", "Orders")}
             {icons(iconMap["wallet"], "/wallet", "Wallet")}
             {icons(iconMap["settings"], "/setting/products", "Setting")}
