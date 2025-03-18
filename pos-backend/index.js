@@ -13,6 +13,8 @@ const ledger = require("./api/Ledger")
 const stockRouter = require("./api/stockManagement")
 const profile = require("./api/profile")
 const bisnessProfile = require("./api/bisnessProfile")
+const whatsapp = require("./api/whatsapp"); 
+
 
 const app = express();
 
@@ -52,6 +54,7 @@ app.use("/api/ledger", ledger);
 app.use("/api/stockManagement", stockRouter);
 app.use("/api/profile", profile); 
 app.use("/api/bisnessProfile", bisnessProfile); 
+app.use("/api/whatsappMsg", whatsapp);
 
 // Email Endpoint
 app.post('/send-email', (req, res) => {
