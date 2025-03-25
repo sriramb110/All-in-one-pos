@@ -14,36 +14,31 @@ const stockRouter = require("./api/stockManagement")
 const profile = require("./api/profile")
 const bisnessProfile = require("./api/bisnessProfile")
 const whatsapp = require("./api/whatsapp"); 
+const {sendSmsWithToken} = require("./api/sendSMS")
 
 
 const app = express();
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Load environment variables
 const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT;
 
-// Check for required environment variables
 if (!mongoURI) {
   console.error("Error: MongoDB URI not set in environment variables");
-  process.exit(1); // Exit if required environment variables are missing
+  process.exit(1); 
 }
 
-// Database connection
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => {
     console.error('MongoDB connection error:', err);
-    process.exit(1); // Exit the application if database connection fails
+    process.exit(1); 
   });
 
-// Routes
 app.get('/', (req, res) => res.send('Welcome'));
 
-// API Endpoints
 app.use('/api/signup', signup); 
 app.use('/api/signin', login); 
 app.use('/api/categories', category);
@@ -55,6 +50,17 @@ app.use("/api/stockManagement", stockRouter);
 app.use("/api/profile", profile); 
 app.use("/api/bisnessProfile", bisnessProfile); 
 app.use("/api/whatsappMsg", whatsapp);
+
+// Send SMS API
+app.post("/api/send-sms", async (req, res) => {
+  try {
+    const { recipient, message } = req.body;
+    await sendSmsWithToken(recipient, message);
+    res.json({ message: "SMS sent successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to send SMS" });
+  }
+});
 
 // Email Endpoint
 app.post('/send-email', (req, res) => {
