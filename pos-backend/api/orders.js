@@ -129,6 +129,82 @@ router.get("/", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/dashboard", authenticateToken, async (req, res) => {
+  try {
+    const businessName = req.user.business;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const last7Days = new Date(today);
+    last7Days.setDate(today.getDate() - 6);
+
+    const last30Days = new Date(today);
+    last30Days.setDate(today.getDate() - 29);
+
+    const aggregateData = async (fromDate) => {
+      return await Orders.aggregate([
+        {
+          $match: {
+            businessName,
+            date: {
+              $gte: new Date(fromDate),
+              $lt: new Date(today.getTime() + 86400000),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            orderCount: { $sum: 1 },
+            totalDiscount: { $sum: "$payment.discount" },
+            totalProductSales: { $sum: { $sum: "$orderList.orderQty" } },
+            totalBalance: {
+              $sum: {
+                $subtract: [
+                  "$totalPrice",
+                  { $add: ["$payment.discount", "$payment.receivedPrice"] },
+                ],
+              },
+            },
+          },
+        },
+      ]);
+    };
+
+    const todayData = (await aggregateData(today))[0] || {
+      orderCount: 0,
+      totalDiscount: 0,
+      totalProductSales: 0,
+      totalBalance: 0,
+    };
+
+    const last7DaysData = (await aggregateData(last7Days))[0] || {
+      orderCount: 0,
+      totalDiscount: 0,
+      totalProductSales: 0,
+      totalBalance: 0,
+    };
+
+    const last30DaysData = (await aggregateData(last30Days))[0] || {
+      orderCount: 0,
+      totalDiscount: 0,
+      totalProductSales: 0,
+      totalBalance: 0,
+    };
+
+    res.json({
+      today: todayData,
+      last7Days: last7DaysData,
+      last30Days: last30DaysData,
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+
+
 router.get("/outward", authenticateToken, async (req, res) => {
   try {
     const businessName = req.user.business;

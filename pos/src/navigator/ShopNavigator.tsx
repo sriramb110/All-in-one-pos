@@ -41,7 +41,7 @@ function ShopNavigator() {
     <SearchProvider>
       <div className={`flex overflow-hidden h-screen w-screen pb-1 ${font}`}>
         <Menu bgMColor={bgMColor} hBgColor={hBgColor} />
-        <div className="w-full h-full  overflow-hidden">
+        <div className="flex-1  overflow-hidden">
           <Headers hBgColor={hBgColor} />
           <div className="overflow-hidden w-full h-full pb-5 p-0.5">
             <Routes>

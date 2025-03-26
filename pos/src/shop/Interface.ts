@@ -34,7 +34,7 @@ export interface Order {
   _id: string;
   Customerdata: Customer;
   payment: Payment;
-  orderList: OrderItem[];
+  orderList: ProductSelected[];
   totalPrice: number;
   orderId: string;
   Date: string;
@@ -179,4 +179,16 @@ export interface PersonalDetail {
   header: string;
   content: string;
   editable?: boolean;
+}
+interface OrderStats {
+  orderCount: number;
+  totalDiscount: number;
+  totalProductSales: number;
+  totalBalance: number;
+}
+
+export interface DashboardOrdersResponse {
+  today: OrderStats;
+  last7Days: OrderStats;
+  last30Days: OrderStats;
 }

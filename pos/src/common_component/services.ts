@@ -339,3 +339,12 @@ export const putBisProfile = async (putData: Partial<Profiles>) => {
   }
 }
 
+export const dashboard = async ()=>{
+  try{
+    const response = await api.get('/order/dashboard')
+      return response
+  }catch (error) {
+    console.log(error)
+  }
+}
+

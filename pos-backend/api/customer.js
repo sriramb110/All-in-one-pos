@@ -3,10 +3,11 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
 const CustomerSchema = new mongoose.Schema({
-    customerName: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    emailId: { type: String },
-    businessName: { type: String, required: true }
+  customerName: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
+  emailId: { type: String },
+  businessName: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
 CustomerSchema.index({ customerName: 1, phoneNumber: 1, emailId: 1 }, { unique: true });
@@ -28,26 +29,38 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
-router.post('/', authenticateToken, async (req, res) => {
-    const { customerName, phoneNumber, emailId } = req.body;
-    const businessName = req.user.business;
+router.post("/", authenticateToken, async (req, res) => {
+  const { customerName, phoneNumber, emailId } = req.body;
+  const businessName = req.user.business;
 
-    if (!customerName || !phoneNumber) {
-        return res.status(400).json({ error: 'Customer Name and phoneNumber are required.' });
-    }
+  if (!customerName || !phoneNumber) {
+    return res
+      .status(400)
+      .json({ error: "Customer Name and phoneNumber are required." });
+  }
 
-    try {
-        const customer = new Customer({ customerName, phoneNumber, emailId, businessName });
-        await customer.save();
-        res.status(201).json({ message: 'Customer added successfully', customer });
-    } catch (error) {
-        if (error.code === 11000 && error.keyPattern?.phoneNumber) {
-            res.status(400).json({ error: 'Customer with the same details already exists.' });
-        } else {
-            res.status(500).json({ error: 'Server error: ' + error.message });
-        }
+  try {
+    const customer = new Customer({
+      customerName,
+      phoneNumber,
+      emailId,
+      businessName,
+      createdAt: new Date(), 
+    });
+
+    await customer.save();
+    res.status(201).json({ message: "Customer added successfully", customer });
+  } catch (error) {
+    if (error.code === 11000 && error.keyPattern?.phoneNumber) {
+      res
+        .status(400)
+        .json({ error: "Customer with the same phone number already exists." });
+    } else {
+      res.status(500).json({ error: "Server error: " + error.message });
     }
+  }
 });
+
 
 router.get('/', authenticateToken, async (req, res) => {
     try {
