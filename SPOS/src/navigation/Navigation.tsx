@@ -1,35 +1,37 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-
-import { RootStackParamList } from './types';
+import { Alert, Button, StyleSheet } from 'react-native';
 import Login from '../screens/Login';
 import Home from '../screens/Home';
+import { RootStackParamList } from './types'; 
 
-interface NavigationProps { }
+interface NavigationProps {}
 
 const Navigation = (props: NavigationProps) => {
+  const Stack = createNativeStackNavigator<RootStackParamList>();
 
-    const Stack = createNativeStackNavigator<RootStackParamList>()
-    return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{ headerShown: false }}
-            />
-        </Stack.Navigator>
-
-    );
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerRight: () => (
+            <Button title="Info" onPress={() => Alert.alert('This is a button!')} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
 };
 
 export default Navigation;
 
 const styles = StyleSheet.create({
-    container: {}
+  container: {},
 });

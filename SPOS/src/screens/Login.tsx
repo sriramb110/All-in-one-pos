@@ -10,6 +10,7 @@ import {
 import api from '../../apis_interface/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser } from '../../apis_interface/services';
+import Toast from 'react-native-toast-message';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -27,7 +28,11 @@ const Login = ({ navigation }: any) => {
   
       if (token) {
         await AsyncStorage.setItem('jsonwebtoken', token);
-        Alert.alert('Success', 'Login successful!');
+        Toast.show({
+          type: 'success',
+          text1: 'Login successfully',
+          visibilityTime: 2000,
+        });
         navigation.navigate('Home'); 
       } else {
         Alert.alert('Login Failed', 'Invalid token received.');
@@ -35,14 +40,18 @@ const Login = ({ navigation }: any) => {
   
     } catch (error: any) {
       const message = error.response?.data?.error || 'Login failed. Please try again.';
-      Alert.alert('Login Error', message);
-      // console.error('Login error:', error);
+      Toast.show({
+        type: 'error',
+        text1: message,
+        visibilityTime: 2000,
+      });
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Welcome to POS</Text>
+      <Text style={styles.title2}>Create your business intelligently.</Text>
 
       <TextInput
         style={styles.input}
@@ -112,5 +121,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#555',
     fontSize: 16,
+  },
+  title2: {
+    fontSize: 20,
+    fontWeight: 'black',
+    marginBottom: 30,
+    textAlign: 'center',
   },
 });
