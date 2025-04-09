@@ -12,7 +12,6 @@ const Navigation = (props: NavigationProps) => {
 
     const Stack = createNativeStackNavigator<RootStackParamList>()
     return (
-        // <Login/>
         <Stack.Navigator>
             <Stack.Screen
                 name="Login"

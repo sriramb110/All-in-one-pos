@@ -7,21 +7,36 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import api from '../../apis_interface/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loginUser } from '../../apis_interface/services';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please fill in both fields');
+      Alert.alert('Missing Fields', 'Please enter both email and password.');
       return;
     }
-
-    if (email === 'test@example.com' && password === '123456') {
-      navigation.navigate('Home'); 
-    } else {
-      Alert.alert('Login Failed', 'Invalid email or password');
+  
+    try {
+      const res = await loginUser(email, password);
+      const { token } = res.data;
+  
+      if (token) {
+        await AsyncStorage.setItem('jsonwebtoken', token);
+        Alert.alert('Success', 'Login successful!');
+        navigation.navigate('Home'); 
+      } else {
+        Alert.alert('Login Failed', 'Invalid token received.');
+      }
+  
+    } catch (error: any) {
+      const message = error.response?.data?.error || 'Login failed. Please try again.';
+      Alert.alert('Login Error', message);
+      // console.error('Login error:', error);
     }
   };
 
